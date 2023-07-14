@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/widgets/primary_button.dart';
+import 'package:whatsup/router.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({
@@ -52,7 +53,7 @@ class WelcomePage extends StatelessWidget {
                   width: 320,
                   child: PrimaryButton(
                     title: "AGREE AND CONTINUE",
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, PageRouter.login),
                   ),
                 ),
                 const Spacer(flex: 2),

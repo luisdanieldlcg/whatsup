@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
+import 'package:whatsup/features/auth/pages/otp_verification.dart';
 import 'package:whatsup/features/welcome/pages/welcome.dart';
 
 class PageRouter {
   static const String welcome = '/welcome';
   static const String login = 'auth/login';
+  static const String otpVerification = 'auth/otp-verification';
 
   static Route<Widget> generateRoutes(RouteSettings settings) {
     AppLogger.getLogger((PageRouter).toString()).d('Navigating to ${settings.name}');
@@ -14,6 +16,8 @@ class PageRouter {
         return _createRoute(const WelcomePage());
       case login:
         return _createRoute(const LoginPage());
+      case otpVerification:
+        return _createRoute(const OTPVerificationPage());
       default:
         return _createRoute(UnknownRoutePage(targetRoute: settings.name!));
     }

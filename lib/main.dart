@@ -38,7 +38,7 @@ class MyApp extends ConsumerWidget {
       title: kAppName,
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: themeNotifier == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.system,
       onGenerateRoute: PageRouter.generateRoutes,
       home: const WelcomePage(),
     );

@@ -22,6 +22,7 @@ class ThemeNotifier extends StateNotifier<Brightness> {
 const kPrimaryColor = Color.fromRGBO(0, 167, 131, 1);
 const kDarkBgColor = Color.fromRGBO(19, 28, 33, 1);
 const kTextHighlightColor = Color.fromRGBO(58, 113, 253, 1);
+// const kDarkAppBarColor = Color.fromRGBO(31, 44, 52, 1);
 final lightTheme = ThemeData.light().copyWith(
   colorScheme: ColorScheme.fromSeed(
     seedColor: kPrimaryColor,
@@ -38,6 +39,13 @@ final lightTheme = ThemeData.light().copyWith(
 final darkTheme = ThemeData.dark().copyWith(
   colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
   scaffoldBackgroundColor: kDarkBgColor,
+  appBarTheme: const AppBarTheme(
+    color: kDarkBgColor,
+    foregroundColor: Colors.white,
+  ),
+  bottomSheetTheme: const BottomSheetThemeData(
+    backgroundColor: kDarkBgColor,
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: kPrimaryColor,
