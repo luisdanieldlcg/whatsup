@@ -1,46 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:whatsup/common/theme.dart';
-import 'package:whatsup/common/util/misc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/common/widgets/primary_button.dart';
 
-class WelcomePage extends ConsumerWidget {
+class WelcomePage extends StatelessWidget {
   const WelcomePage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeNotifierProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            children: [
-              const Spacer(),
-              const Text(
-                "Welcome Page",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
+                const Text(
+                  "Welcome to $kAppName",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Text("The default theme is same as system theme"),
-              const SizedBox(height: 20),
-              const Text("Enable dark mode"),
-              const SizedBox(height: 20),
-              Switch(
-                value: themeMode == Brightness.dark,
-                onChanged: (_) {
-                  ref.read(themeNotifierProvider.notifier).toggle();
-                  showSnackbar(
-                    context,
-                    "Your theme has been switched to ${themeMode == Brightness.dark ? 'dark' : 'light'}",
-                  );
-                },
-              ),
-              const Spacer(),
-            ],
+                const SizedBox(height: 50),
+                Image.asset(
+                  "assets/img/welcome_bg.png",
+                  width: 240,
+                  height: 240,
+                  color: kPrimaryColor,
+                ),
+                const SizedBox(height: 50),
+                const Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "Read our "),
+                      TextSpan(
+                        text: "Privacy Policy. ",
+                        style: TextStyle(color: kTextHighlightColor),
+                      ),
+                      TextSpan(text: "Tap \"Agree and continue\" to accept the "),
+                      TextSpan(
+                        text: "Terms of Service.",
+                        style: TextStyle(color: kTextHighlightColor),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 50),
+                SizedBox(
+                  width: 320,
+                  child: PrimaryButton(
+                    title: "AGREE AND CONTINUE",
+                    onPressed: () {},
+                  ),
+                ),
+                const Spacer(flex: 2),
+              ],
+            ),
           ),
         ),
       ),

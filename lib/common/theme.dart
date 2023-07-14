@@ -19,12 +19,30 @@ class ThemeNotifier extends StateNotifier<Brightness> {
   }
 }
 
+const kPrimaryColor = Color.fromRGBO(0, 167, 131, 1);
+const kDarkBgColor = Color.fromRGBO(19, 28, 33, 1);
+const kTextHighlightColor = Color.fromRGBO(58, 113, 253, 1);
 final lightTheme = ThemeData.light().copyWith(
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: kPrimaryColor,
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: kPrimaryColor,
+      foregroundColor: Colors.black,
+    ),
+  ),
   useMaterial3: true,
 );
 
 final darkTheme = ThemeData.dark().copyWith(
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+  colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
+  scaffoldBackgroundColor: kDarkBgColor,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: kPrimaryColor,
+      foregroundColor: Colors.black,
+    ),
+  ),
   useMaterial3: true,
 );
