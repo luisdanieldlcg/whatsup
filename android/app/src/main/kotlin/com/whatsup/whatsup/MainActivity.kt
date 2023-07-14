@@ -1,4 +1,4 @@
-package com.example.flutter_firebase_template
+package com.whatsup.whatsup
 
 import io.flutter.embedding.android.FlutterActivity
 

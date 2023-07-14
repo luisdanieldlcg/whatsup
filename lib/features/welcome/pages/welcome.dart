@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_template/common/theme.dart';
-import 'package:flutter_firebase_template/common/util/misc.dart';
+import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WelcomePage extends ConsumerWidget {

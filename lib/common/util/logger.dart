@@ -1,4 +1,4 @@
-import 'package:flutter_firebase_template/common/util/run_mode.dart';
+import 'package:whatsup/common/util/run_mode.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

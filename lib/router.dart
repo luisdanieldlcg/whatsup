@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_template/common/util/logger.dart';
-import 'package:flutter_firebase_template/features/auth/pages/login.dart';
-import 'package:flutter_firebase_template/features/welcome/pages/welcome.dart';
+import 'package:whatsup/common/util/logger.dart';
+import 'package:whatsup/features/auth/pages/login.dart';
+import 'package:whatsup/features/welcome/pages/welcome.dart';
 
 class PageRouter {
   static const String welcome = '/welcome';

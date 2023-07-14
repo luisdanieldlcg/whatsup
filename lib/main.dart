@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_template/common/theme.dart';
-import 'package:flutter_firebase_template/common/util/logger.dart';
-import 'package:flutter_firebase_template/features/welcome/pages/welcome.dart';
-import 'package:flutter_firebase_template/router.dart';
+import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/common/util/logger.dart';
+import 'package:whatsup/features/welcome/pages/welcome.dart';
+import 'package:whatsup/firebase_options.dart';
+import 'package:whatsup/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -10,9 +13,12 @@ import 'common/util/run_mode.dart';
 
 final Logger logger = AppLogger.getLogger('init');
 
-void main() {
+void main() async {
   logger.i("Initializing app in ${RunModeExtension.currentMode.name} mode");
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     ProviderScope(
       observers: [ProviderStateChangeObserver()],
@@ -29,7 +35,7 @@ class MyApp extends ConsumerWidget {
     final themeNotifier = ref.watch(themeNotifierProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'App',
+      title: kAppName,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeNotifier == Brightness.dark ? ThemeMode.dark : ThemeMode.light,

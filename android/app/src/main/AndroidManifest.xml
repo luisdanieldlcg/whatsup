@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="flutter_firebase_template"
+        android:label="whatsup"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
