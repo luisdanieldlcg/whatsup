@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 
-final authRepository = Provider((ref) {
+final authRepositoryProvider = Provider((ref) {
   return AuthRepository(auth: ref.watch(authProvider));
 });
 
@@ -20,7 +20,10 @@ class AuthRepository {
   }) : _auth = auth;
 
   Option<UserModel> get currentUser {
-    return Option.fromNullable(_auth.currentUser).map((user) => UserModel(id: user.uid));
+    return Option.fromNullable(_auth.currentUser).map(
+      // TODO: get name and profile image from active user provider
+      (user) => UserModel(uid: user.uid, name: "", profileImage: ""),
+    );
   }
 
   Future<void> sendOTP({

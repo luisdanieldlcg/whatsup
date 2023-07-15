@@ -6,6 +6,7 @@ import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/auth/pages/create_profile.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
 import 'package:whatsup/features/auth/pages/otp_verification.dart';
+import 'package:whatsup/features/home/pages/home.dart';
 import 'package:whatsup/features/welcome/pages/welcome.dart';
 import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
@@ -44,7 +45,7 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.dark,
       // themeMode: themeNotifier == Brightness.light ? ThemeMode.light : ThemeMode.dark,
       onGenerateRoute: PageRouter.generateRoutes,
-      home: const LoginPage(),
+      home: const HomePage(),
     );
   }
 }

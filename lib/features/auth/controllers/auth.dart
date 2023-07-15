@@ -9,7 +9,7 @@ import 'package:whatsup/common/util/misc.dart';
 
 final authControllerProvider = Provider(
   (ref) => AuthController(
-    auth: ref.watch(authRepository),
+    auth: ref.read(authRepositoryProvider),
   ),
 );
 
