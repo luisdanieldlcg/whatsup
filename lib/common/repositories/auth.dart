@@ -6,6 +6,7 @@ import 'package:whatsup/common/util/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
+import 'package:whatsup/main.dart';
 
 final authRepository = Provider((ref) {
   return AuthRepository(auth: ref.watch(authProvider));
@@ -24,12 +25,14 @@ class AuthRepository {
   }
 
   Future<void> sendOTP({
+    required String phoneNumber,
     required VoidCallback onSuccess,
     required Function(String verificationId) onCodeSent,
     required Function(String err) onError,
   }) async {
     try {
       await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
         verificationCompleted: (credential) async {
           await _auth.signInWithCredential(credential);
           onSuccess();
@@ -68,8 +71,9 @@ class AuthRepository {
     }
   }
 
-  static String _getOtpErrorMsg(String code) {
+  String _getOtpErrorMsg(String code) {
     String message = "Something went wrong";
+    logger.e("Error code: $code");
     switch (code) {
       case "account-exists-with-different-credential":
         message = "There is already an account with this phone number";

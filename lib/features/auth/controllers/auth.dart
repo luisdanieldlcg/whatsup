@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/auth.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
+import 'package:whatsup/common/util/misc.dart';
 
 final authControllerProvider = Provider(
   (ref) => AuthController(
@@ -19,10 +21,14 @@ class AuthController {
     required this.auth,
   });
 
-  void sendOTP() async {
+  void sendOTP({
+    required String phoneNumber,
+    required BuildContext context,
+  }) async {
     await auth.sendOTP(
+      phoneNumber: phoneNumber,
       onCodeSent: (id) => {},
-      onError: (error) => {},
+      onError: (error) => showSnackbar(context, error),
       onSuccess: () => {},
     );
   }

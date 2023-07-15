@@ -1,22 +1,24 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/primary_button.dart';
+import 'package:whatsup/features/auth/controllers/auth.dart';
 import 'package:whatsup/router.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
     super.key,
   });
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   Country country = Country.worldWide;
   final _extController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -131,9 +133,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void goToOTPVerification() {
     if (_extController.text.isEmpty || _phoneController.text.isEmpty) {
-      showSnackbar(context, "Please enter your phone number.");
+      showSnackbar(context, "Fill in phone number and extension.");
       return;
     }
     Navigator.pushNamed(context, PageRouter.otpVerification);
+    ref.read(authControllerProvider).sendOTP(
+          context: context,
+          phoneNumber: '+${country.phoneCode}${_phoneController.text.trim()}',
+        );
   }
 }
