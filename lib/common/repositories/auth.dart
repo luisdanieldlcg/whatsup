@@ -6,7 +6,6 @@ import 'package:whatsup/common/util/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
-import 'package:whatsup/main.dart';
 
 final authRepository = Provider((ref) {
   return AuthRepository(auth: ref.watch(authProvider));
@@ -40,7 +39,9 @@ class AuthRepository {
         verificationFailed: (err) {
           onError(_getOtpErrorMsg(err.code));
         },
-        codeSent: (id, resendToken) => onCodeSent(id),
+        codeSent: (id, resendToken) async {
+          onCodeSent(id);
+        },
         codeAutoRetrievalTimeout: (id) {},
       );
     } on FirebaseAuthException catch (e) {
@@ -63,6 +64,7 @@ class AuthRepository {
         smsCode: inputCode,
       );
       await _auth.signInWithCredential(credential);
+      logger.i("OTP verified successfully. You are now logged in");
       onSuccess();
     } on FirebaseAuthException catch (e) {
       onError(_getOtpErrorMsg(e.code));
@@ -80,6 +82,9 @@ class AuthRepository {
         break;
       case "operation-not-allowed":
         message = "Phone auth is not enabled";
+        break;
+      case "invalid-verification-code":
+        message = "Failed to verify phone number. Please check the code you entered and try again";
         break;
       default:
         message = "Failed to verify phone number. Please try again";

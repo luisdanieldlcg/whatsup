@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
+  final bool loading;
   const PrimaryButton({
     super.key,
     required this.title,
     required this.onPressed,
+    this.loading = false,
   });
 
   @override
@@ -18,7 +20,21 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
       ),
-      child: Text(title),
+      child: loading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
     );
   }
 }

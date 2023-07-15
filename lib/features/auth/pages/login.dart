@@ -22,6 +22,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Country country = Country.worldWide;
   final _extController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +100,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               padding: const EdgeInsets.only(bottom: 50),
               child: PrimaryButton(
                 title: "NEXT",
+                loading: loading,
                 onPressed: goToOTPVerification,
               ),
             ),
@@ -131,15 +133,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  void goToOTPVerification() {
+  void goToOTPVerification() async {
     if (_extController.text.isEmpty || _phoneController.text.isEmpty) {
       showSnackbar(context, "Fill in phone number and extension.");
       return;
     }
-    Navigator.pushNamed(context, PageRouter.otpVerification);
+    setState(() {
+      loading = true;
+    });
     ref.read(authControllerProvider).sendOTP(
           context: context,
           phoneNumber: '+${country.phoneCode}${_phoneController.text.trim()}',
+          otpVerificationPage: PageRouter.otpVerification,
         );
+    await Future.delayed(const Duration(milliseconds: 300));
+    setState(() {
+      loading = false;
+    });
   }
 }

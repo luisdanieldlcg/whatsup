@@ -24,12 +24,32 @@ class AuthController {
   void sendOTP({
     required String phoneNumber,
     required BuildContext context,
+    required String otpVerificationPage,
   }) async {
     await auth.sendOTP(
       phoneNumber: phoneNumber,
-      onCodeSent: (id) => {},
+      onCodeSent: (id) => {
+        Navigator.pushNamed(context, otpVerificationPage, arguments: id),
+      },
       onError: (error) => showSnackbar(context, error),
       onSuccess: () => {},
+    );
+  }
+
+  void verifyOTP({
+    required String idSent,
+    required String inputCode,
+    required BuildContext context,
+    required String createProfileRoute,
+  }) async {
+    await auth.verifyOTP(
+      context: context,
+      idSent: idSent,
+      inputCode: inputCode,
+      onSuccess: () {
+        Navigator.pushNamedAndRemoveUntil(context, createProfileRoute, (route) => false);
+      },
+      onError: (error) => showSnackbar(context, error),
     );
   }
 
