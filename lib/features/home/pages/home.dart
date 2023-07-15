@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/router.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -54,7 +55,9 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: kPrimaryColor,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, PageRouter.selectContact);
+          },
           child: const Icon(Icons.comment, color: Colors.white),
         ),
       ),

@@ -20,10 +20,25 @@ class AuthRepository {
   }) : _auth = auth;
 
   Option<UserModel> get currentUser {
-    return Option.fromNullable(_auth.currentUser).map(
-      // TODO: get name and profile image from active user provider
-      (user) => UserModel(uid: user.uid, name: "", profileImage: ""),
-    );
+    if (_auth.currentUser == null) {
+      return const Option.none();
+    }
+    final user = _auth.currentUser!;
+    if (user.phoneNumber == null) {
+      logger.d(
+        "Somehow the user with uid ${_auth.currentUser!.uid} is logged in without a phone number.",
+      );
+      return const Option.none();
+    }
+    return Option.of(user).map((user) {
+      return UserModel(
+        uid: user.uid,
+        phoneNumber: user.phoneNumber!,
+        // TODO: either return another type or fetch this from user provider
+        name: "",
+        profileImage: "",
+      );
+    });
   }
 
   Future<void> sendOTP({

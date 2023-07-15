@@ -21,7 +21,7 @@ class ThemeNotifier extends StateNotifier<Brightness> {
 
 const kPrimaryColor = Color.fromRGBO(18, 140, 126, 1);
 const kDarkBgColor = Color.fromRGBO(19, 28, 33, 1);
-const kLightBgColor = Color.fromRGBO(246, 244, 244, 1);
+const kLightBgColor = Color.fromRGBO(255, 255, 255, 1);
 const kTextHighlightColor = Color.fromRGBO(58, 113, 253, 1);
 const kDarkAppBarColor = Color.fromRGBO(31, 44, 52, 1);
 const kUnselectedLabelColor = Color.fromRGBO(190, 196, 201, 1);
@@ -32,6 +32,7 @@ final lightTheme = ThemeData.light().copyWith(
     seedColor: kPrimaryColor,
   ),
   scaffoldBackgroundColor: kLightBgColor,
+  appBarTheme: const AppBarTheme(elevation: 0.0),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: kPrimaryColor,
@@ -48,6 +49,7 @@ final darkTheme = ThemeData.dark().copyWith(
   ),
   brightness: Brightness.dark,
   appBarTheme: const AppBarTheme(
+    elevation: 0.0,
     color: kDarkAppBarColor,
     foregroundColor: Colors.white,
   ),

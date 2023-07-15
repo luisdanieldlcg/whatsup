@@ -48,12 +48,12 @@ class UserRepository {
       return const Option.none();
     }
     final user = maybeUser.unwrap();
-    final json = await _db.collection(kUsersCollectionId).doc(user.uid).get();
+    final json = await users.doc(user.uid).get();
     if (json.data() == null) {
       logger.d("The current logged in user does not exists in the database");
       return const Option.none();
     }
-    return Option.of(UserModel.fromMap(json.data()!));
+    return Option.of(json.data()!);
   }
 
   Future<void> create({
@@ -83,6 +83,7 @@ class UserRepository {
         uid: userId.uid,
         name: name,
         profileImage: profileImage,
+        phoneNumber: userId.phoneNumber,
       );
       _db.collection("users").doc(newUser.uid).set(newUser.toMap());
       onSuccess();
@@ -99,5 +100,12 @@ class UserRepository {
       default:
         return "Something went wrong";
     }
+  }
+
+  CollectionReference<UserModel> get users {
+    return _db.collection(kUsersCollectionId).withConverter<UserModel>(
+          fromFirestore: (snapshot, _) => UserModel.fromMap(snapshot.data()!),
+          toFirestore: (user, _) => user.toMap(),
+        );
   }
 }
