@@ -82,9 +82,11 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
           },
         );
     await Future.delayed(const Duration(milliseconds: 300));
-    setState(() {
-      loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override

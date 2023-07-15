@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:logger/logger.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/auth.dart';
@@ -16,7 +15,14 @@ import 'package:whatsup/common/util/logger.dart';
 
 final userRepositoryProvider = Provider((ref) {
   return UserRepository(
-      db: ref.read(dbProvider), ref: ref, authRepository: ref.read(authRepositoryProvider));
+    db: ref.read(dbProvider),
+    ref: ref,
+    authRepository: ref.read(authRepositoryProvider),
+  );
+});
+
+final userFetchProvider = FutureProvider((ref) {
+  return ref.read(userRepositoryProvider).getUser();
 });
 
 class UserRepository {
@@ -24,6 +30,7 @@ class UserRepository {
   final AuthRepository _authRepository;
   final Ref _ref;
   static final logger = AppLogger.getLogger((UserRepository).toString());
+
   const UserRepository({
     required FirebaseFirestore db,
     required AuthRepository authRepository,
@@ -31,6 +38,23 @@ class UserRepository {
   })  : _db = db,
         _authRepository = authRepository,
         _ref = ref;
+
+  /// Get a snapshot of the current user. It will return `None` if the user is not logged in
+  /// or the user does not exists in the database.
+  Future<Option<UserModel>> getUser() async {
+    final maybeUser = _authRepository.currentUser;
+    if (maybeUser.isNone()) {
+      logger.d("Attempted to get user without being logged in");
+      return const Option.none();
+    }
+    final user = maybeUser.unwrap();
+    final json = await _db.collection(kUsersCollectionId).doc(user.uid).get();
+    if (json.data() == null) {
+      logger.d("The current logged in user does not exists in the database");
+      return const Option.none();
+    }
+    return Option.of(UserModel.fromMap(json.data()!));
+  }
 
   Future<void> create({
     required String name,
@@ -40,13 +64,16 @@ class UserRepository {
   }) async {
     try {
       final user = _authRepository.currentUser;
-      if (user.isNone()) return;
+      if (user.isNone()) {
+        logger.d("Attempted to get user without being logged in");
+        return;
+      }
       final userId = user.unwrap();
       String profileImage = await avatar.match(
         () async => kDefaultAvatarUrl,
         (file) async {
           final url = await _ref.read(storageRepositoryProvider).uploadImage(
-                path: "users/${userId.uid}/avatar",
+                path: "$kUsersCollectionId/${userId.uid}/avatar",
                 file: avatar.unwrap(),
               );
           return url;

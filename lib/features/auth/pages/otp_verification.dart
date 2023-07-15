@@ -87,8 +87,10 @@ class _OTPVerificationPageState extends ConsumerState<OTPVerificationPage> {
           createProfileRoute: PageRouter.createProfile,
         );
     await Future.delayed(const Duration(milliseconds: 200));
-    setState(() {
-      loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

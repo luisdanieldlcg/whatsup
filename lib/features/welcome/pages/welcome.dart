@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/widgets/primary_button.dart';
 import 'package:whatsup/router.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends ConsumerWidget {
   const WelcomePage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(themeNotifierProvider) == Brightness.dark;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Welcome to $kAppName",
+          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        ),
+        centerTitle: true,
+        backgroundColor: isDarkMode ? kDarkBgColor : kLightBgColor,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -19,11 +30,6 @@ class WelcomePage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 60),
-                const Text(
-                  "Welcome to $kAppName",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 50),
                 Image.asset(
                   "assets/img/welcome_bg.png",
                   width: 240,

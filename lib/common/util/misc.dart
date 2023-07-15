@@ -9,6 +9,7 @@ void showSnackbar(BuildContext context, String message) {
     SnackBar(
       behavior: SnackBarBehavior.floating,
       showCloseIcon: true,
+      closeIconColor: Colors.white,
       content: Text(message),
       duration: const Duration(seconds: 3),
       shape: const RoundedRectangleBorder(

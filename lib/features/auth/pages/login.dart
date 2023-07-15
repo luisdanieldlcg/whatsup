@@ -97,7 +97,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.only(bottom: 50),
+              padding: const EdgeInsets.only(bottom: 60),
               child: PrimaryButton(
                 title: "NEXT",
                 loading: loading,
@@ -147,8 +147,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           otpVerificationPage: PageRouter.otpVerification,
         );
     await Future.delayed(const Duration(milliseconds: 300));
-    setState(() {
-      loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }
