@@ -89,8 +89,8 @@ class SelectContactPage extends ConsumerWidget {
             context,
             "This contact is not registered on $kAppName",
           ),
-          contactFound: () {
-            Navigator.pushReplacementNamed(context, PageRouter.chat);
+          contactFound: (user) {
+            Navigator.pushReplacementNamed(context, PageRouter.chat, arguments: user);
           },
         );
   }

@@ -37,6 +37,7 @@ class AuthRepository {
         // TODO: either return another type or fetch this from user provider
         name: "",
         profileImage: "",
+        isOnline: true,
       );
     });
   }

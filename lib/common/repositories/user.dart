@@ -25,6 +25,10 @@ final userFetchProvider = FutureProvider((ref) {
   return ref.read(userRepositoryProvider).getUser();
 });
 
+final userStream = StreamProvider.family<UserModel, String>((ref, id) {
+  return ref.watch(userRepositoryProvider).userStream(id);
+});
+
 class UserRepository {
   final FirebaseFirestore _db;
   final AuthRepository _authRepository;
@@ -84,6 +88,7 @@ class UserRepository {
         name: name,
         profileImage: profileImage,
         phoneNumber: userId.phoneNumber,
+        isOnline: true,
       );
       _db.collection("users").doc(newUser.uid).set(newUser.toMap());
       onSuccess();
@@ -107,5 +112,9 @@ class UserRepository {
           fromFirestore: (snapshot, _) => UserModel.fromMap(snapshot.data()!),
           toFirestore: (user, _) => user.toMap(),
         );
+  }
+
+  Stream<UserModel> userStream(String uid) {
+    return users.doc(uid).snapshots().map((event) => event.data()!);
   }
 }

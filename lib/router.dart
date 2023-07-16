@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/auth/pages/create_profile.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
@@ -34,7 +35,8 @@ class PageRouter {
       case selectContact:
         return _createRoute(const SelectContactPage());
       case chat:
-        return _createRoute(const ChatPage());
+        final UserModel other = settings.arguments as UserModel;
+        return _createRoute(ChatPage(otherUser: other));
       default:
         return _createRoute(UnknownRoutePage(targetRoute: settings.name!));
     }

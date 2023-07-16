@@ -6,12 +6,14 @@ class UserModel {
   final String name;
   final String profileImage;
   final String phoneNumber;
+  final bool isOnline;
 
   const UserModel({
     required this.uid,
     required this.name,
     required this.profileImage,
     required this.phoneNumber,
+    required this.isOnline,
   });
 
   UserModel copyWith({
@@ -19,12 +21,14 @@ class UserModel {
     String? name,
     String? profileImage,
     String? phoneNumber,
+    bool? isOnline,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
       name: name ?? this.name,
       profileImage: profileImage ?? this.profileImage,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      isOnline: isOnline ?? this.isOnline,
     );
   }
 
@@ -34,6 +38,7 @@ class UserModel {
       'name': name,
       'profileImage': profileImage,
       'phoneNumber': phoneNumber,
+      'isOnline': isOnline,
     };
   }
 
@@ -43,12 +48,13 @@ class UserModel {
       name: map['name'] as String,
       profileImage: map['profileImage'] as String,
       phoneNumber: map['phoneNumber'] as String,
+      isOnline: map['isOnline'] as bool,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, name: $name, profileImage: $profileImage, phoneNumber: $phoneNumber)';
+    return 'UserModel(uid: $uid, name: $name, profileImage: $profileImage, phoneNumber: $phoneNumber, isOnline: $isOnline)';
   }
 
   @override
@@ -58,11 +64,16 @@ class UserModel {
     return other.uid == uid &&
         other.name == name &&
         other.profileImage == profileImage &&
-        other.phoneNumber == phoneNumber;
+        other.phoneNumber == phoneNumber &&
+        other.isOnline == isOnline;
   }
 
   @override
   int get hashCode {
-    return uid.hashCode ^ name.hashCode ^ profileImage.hashCode ^ phoneNumber.hashCode;
+    return uid.hashCode ^
+        name.hashCode ^
+        profileImage.hashCode ^
+        phoneNumber.hashCode ^
+        isOnline.hashCode;
   }
 }

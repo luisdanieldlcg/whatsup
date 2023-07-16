@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
@@ -29,7 +30,7 @@ class SelectContactController {
     required Contact selected,
     required BuildContext context,
     required VoidCallback contactNotFound,
-    required VoidCallback contactFound,
+    required Function(UserModel user) contactFound,
   }) async {
     String phone =
         selected.phones[0].number.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '');
@@ -42,6 +43,6 @@ class SelectContactController {
     if (snapshot.docs[0].data().phoneNumber != phone) {
       return contactNotFound();
     }
-    return contactFound();
+    contactFound(snapshot.docs[0].data());
   }
 }
