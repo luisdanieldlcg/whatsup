@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/common/util/misc.dart';
+import 'package:whatsup/common/widgets/avatar.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/contact/controllers/contact.dart';
@@ -62,14 +64,9 @@ class SelectContactPage extends ConsumerWidget {
                     contact.displayName,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  leading: contact.photo != null
-                      // use default avatar with grey background
-                      ? CircleAvatar(backgroundImage: MemoryImage(contact.photo!))
-                      // whatsapp default avatar with corner a outlined
-                      : const CircleAvatar(
-                          backgroundColor: Color.fromRGBO(207, 218, 221, 1),
-                          child: Icon(Icons.person, color: Colors.white),
-                        ),
+                  leading: Avatar(
+                    image: Option.fromNullable(contact.photo),
+                  ),
                 ),
               );
             },

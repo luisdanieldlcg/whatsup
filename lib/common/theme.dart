@@ -39,6 +39,9 @@ final lightTheme = ThemeData.light().copyWith(
       elevation: 1.0,
     ),
   ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: kPrimaryColor,
+  ),
 );
 
 final darkTheme = ThemeData.dark().copyWith(

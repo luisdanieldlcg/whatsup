@@ -32,8 +32,11 @@ class SelectContactController {
     required VoidCallback contactNotFound,
     required Function(UserModel user) contactFound,
   }) async {
-    String phone =
-        selected.phones[0].number.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '');
+    String phone = selected.phones[0].number
+        .replaceAll(' ', '')
+        .replaceAll('(', '')
+        .replaceAll(')', '')
+        .replaceAll('-', '');
     final query = userRepository.users.where(kPhoneNumberField, isEqualTo: phone).limit(1).get();
     final snapshot = await query;
     if (snapshot.docs.isEmpty) {
