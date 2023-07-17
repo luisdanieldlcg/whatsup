@@ -55,8 +55,14 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
             final isMyMessage =
                 message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
             return isMyMessage
-                ? SenderMessageCard(message: message)
-                : ReceiverMessageCard(message: message);
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16, bottom: 2, top: 2),
+                    child: SenderMessageCard(message: message),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(right: 16, bottom: 2, top: 2),
+                    child: ReceiverMessageCard(message: message),
+                  );
           },
         );
       },

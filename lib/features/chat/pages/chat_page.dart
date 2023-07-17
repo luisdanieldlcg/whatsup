@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/theme.dart';
-import 'package:whatsup/common/widgets/avatar.dart';
 import 'package:whatsup/features/chat/widgets/chat_messages.dart';
 import 'package:whatsup/features/chat/widgets/chat_textfield.dart';
 
