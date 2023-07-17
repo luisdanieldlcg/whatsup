@@ -37,6 +37,11 @@ class SelectContactController {
         .replaceAll('(', '')
         .replaceAll(')', '')
         .replaceAll('-', '');
+
+    // make sure the phone starts with +
+    if (!phone.startsWith('+')) {
+      phone = '+$phone';
+    }
     final query = userRepository.users.where(kPhoneNumberField, isEqualTo: phone).limit(1).get();
     final snapshot = await query;
     if (snapshot.docs.isEmpty) {

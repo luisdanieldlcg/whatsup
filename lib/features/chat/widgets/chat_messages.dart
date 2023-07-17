@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/widgets/error.dart';
+import 'package:whatsup/common/widgets/progress.dart';
+import 'package:whatsup/features/auth/controllers/auth.dart';
+import 'package:whatsup/features/chat/controller/chat_controller.dart';
+import 'package:whatsup/features/chat/widgets/receiver_message_card.dart';
+import 'package:whatsup/features/chat/widgets/sender_message_card.dart';
+
+class ChatMessages extends ConsumerStatefulWidget {
+  final String receiverId;
+  const ChatMessages({
+    super.key,
+    required this.receiverId,
+  });
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ChatMessagesState();
+}
+
+class _ChatMessagesState extends ConsumerState<ChatMessages> {
+  final scroll = ScrollController();
+  @override
+  void dispose() {
+    super.dispose();
+    scroll.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final liveMessages = ref.watch(messagesStreamProvider(widget.receiverId));
+    return liveMessages.when(
+      data: (messages) {
+        if (messages.isEmpty) {
+          return const Center(
+            child: Text('No messages sent'),
+          );
+        }
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          // scroll.jumpTo(scroll.position.maxScrollExtent);
+          scroll.animateTo(
+            scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.fastEaseInToSlowEaseOut,
+          );
+        });
+        return ListView.builder(
+          controller: scroll,
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            final message = messages[index];
+            final isMyMessage =
+                message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
+            return isMyMessage
+                ? SenderMessageCard(message: message)
+                : ReceiverMessageCard(message: message);
+          },
+        );
+      },
+      error: (err, trace) => UnhandledError(
+        error: err.toString(),
+      ),
+      loading: () => const WorkProgressIndicator(),
+    );
+  }
+}

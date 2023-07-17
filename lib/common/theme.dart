@@ -11,7 +11,7 @@ class ThemeNotifier extends StateNotifier<Brightness> {
 
   static Brightness get _systemBrightness {
     // return SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    return Brightness.light;
+    return Brightness.dark;
   }
 
   void toggle() {
@@ -25,6 +25,8 @@ const kLightBgColor = Color.fromRGBO(255, 255, 255, 1);
 const kTextHighlightColor = Color.fromRGBO(58, 113, 253, 1);
 const kDarkAppBarColor = Color.fromRGBO(31, 44, 52, 1);
 const kUnselectedLabelColor = Color.fromRGBO(190, 196, 201, 1);
+const receiverMessageColor = Color.fromRGBO(37, 45, 49, 1);
+const senderMessageColor = Color.fromRGBO(5, 96, 98, 1);
 
 final lightTheme = ThemeData.light().copyWith(
   colorScheme: ColorScheme.fromSeed(
@@ -75,5 +77,9 @@ final darkTheme = ThemeData.dark().copyWith(
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
     ),
+  ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: kPrimaryColor,
+    foregroundColor: Colors.white,
   ),
 );

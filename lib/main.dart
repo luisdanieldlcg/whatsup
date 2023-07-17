@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
+import 'package:whatsup/features/auth/pages/login.dart';
+import 'package:whatsup/features/home/pages/home.dart';
 import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

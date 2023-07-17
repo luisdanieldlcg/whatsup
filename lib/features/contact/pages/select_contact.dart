@@ -3,7 +3,6 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/util/constants.dart';
-import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/avatar.dart';
 import 'package:whatsup/common/widgets/error.dart';

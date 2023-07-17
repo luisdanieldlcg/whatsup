@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/widgets/avatar.dart';
+import 'package:whatsup/features/chat/widgets/chat_messages.dart';
+import 'package:whatsup/features/chat/widgets/chat_textfield.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   /// The user that is being chatted with
@@ -20,13 +22,16 @@ class ChatPage extends ConsumerStatefulWidget {
 class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: Avatar(),
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(widget.otherUser.profileImage),
+              ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -56,44 +61,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ],
       ),
       body: Column(
-        children: [],
-      ),
-      bottomSheet: Row(
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 6.0, right: 2.0, bottom: 6.0),
-              child: Material(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 1.5,
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    hintText: "Type a message",
-                    isDense: false,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.all(10.0),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: SizedBox(
-              width: 48,
-              height: 48,
-              child: FloatingActionButton(
-                onPressed: () {},
-                child: const Icon(Icons.send),
-              ),
-            ),
-          ),
+          Expanded(child: ChatMessages(receiverId: widget.otherUser.uid)),
+          ChatTextField(receiverId: widget.otherUser.uid)
         ],
       ),
     );

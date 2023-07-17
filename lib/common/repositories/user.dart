@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:whatsup/common/models/chat.dart';
+import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/auth.dart';
@@ -22,7 +24,7 @@ final userRepositoryProvider = Provider((ref) {
 });
 
 final userFetchProvider = FutureProvider((ref) {
-  return ref.read(userRepositoryProvider).getUser();
+  return ref.watch(userRepositoryProvider).getUser();
 });
 
 final userStream = StreamProvider.family<UserModel, String>((ref, id) {
@@ -111,6 +113,26 @@ class UserRepository {
     return _db.collection(kUsersCollectionId).withConverter<UserModel>(
           fromFirestore: (snapshot, _) => UserModel.fromMap(snapshot.data()!),
           toFirestore: (user, _) => user.toMap(),
+        );
+  }
+
+  CollectionReference<ChatModel> userChats(String userId) {
+    return users.doc(userId).collection(kChatsSubCollectionId).withConverter<ChatModel>(
+          fromFirestore: (snapshot, _) => ChatModel.fromMap(snapshot.data()!),
+          toFirestore: (chat, _) => chat.toMap(),
+        );
+  }
+
+  CollectionReference<MessageModel> chatMessages({
+    required String userId,
+    required String chatId,
+  }) {
+    return userChats(userId)
+        .doc(chatId)
+        .collection(kMessagesSubCollectionId)
+        .withConverter<MessageModel>(
+          fromFirestore: (snapshot, _) => MessageModel.fromMap(snapshot.data()!),
+          toFirestore: (message, _) => message.toMap(),
         );
   }
 

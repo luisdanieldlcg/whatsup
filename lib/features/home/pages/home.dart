@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/features/home/widgets/chat_list.dart';
 import 'package:whatsup/router.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -48,7 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         body: const TabBarView(
           children: [
-            Center(child: Text("Chat")),
+            ChatList(),
             Center(child: Text("Status")),
             Center(child: Text("Calls")),
           ],
