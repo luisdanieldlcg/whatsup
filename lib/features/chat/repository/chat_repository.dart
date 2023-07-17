@@ -15,7 +15,7 @@ final chatRepositoryProvider = Provider((ref) {
     user: ref.read(userRepositoryProvider),
     auth: ref.read(authRepositoryProvider),
   );
-});
+}, name: (ChatRepository).toString());
 
 class ChatRepository {
   final UserRepository _db;
@@ -51,8 +51,8 @@ class ChatRepository {
   }
 
   Future<void> updateChat({
-    required UserModel messageSender,
-    required UserModel messageReceiver,
+    required UserModel sender,
+    required UserModel receiver,
     required String messageReceiverId,
     required DateTime messageTime,
     required String message,
@@ -62,20 +62,20 @@ class ChatRepository {
     final userId = activeUser.unwrap().uid; // assuming that the user is logged in
 
     final receiverChat = ChatModel(
-      name: messageSender.name,
-      profileImage: messageSender.profileImage,
-      receiverId: messageReceiverId,
+      name: sender.name,
+      profileImage: sender.profileImage,
+      receiverId: sender.uid,
       lastMessageTime: messageTime,
       lastMessage: message,
     );
 
-    await _db.userChats(receiverChat.receiverId).doc(userId).set(receiverChat);
+    await _db.userChats(messageReceiverId).doc(userId).set(receiverChat);
 
     // Then we update the chat of the sender
     final senderChat = ChatModel(
-      name: messageReceiver.name,
-      profileImage: messageReceiver.profileImage,
-      receiverId: userId,
+      name: receiver.name,
+      profileImage: receiver.profileImage,
+      receiverId: receiver.uid,
       lastMessageTime: messageTime,
       lastMessage: message,
     );
@@ -98,8 +98,8 @@ class ChatRepository {
         return;
       }
       updateChat(
-        messageSender: sender,
-        messageReceiver: receiver,
+        sender: sender,
+        receiver: receiver,
         messageReceiverId: receiver.uid,
         messageTime: time,
         message: message,
@@ -112,7 +112,9 @@ class ChatRepository {
         time: time,
         type: ChatMessageType.text,
       );
-    } catch (e) {}
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 
   Stream<List<ChatModel>> get chats {
@@ -120,7 +122,10 @@ class ChatRepository {
       () => const Stream.empty(),
       (userModel) {
         return _db.userChats(userModel.uid).snapshots().map((event) {
-          return event.docs.map((e) => e.data()).toList();
+          return event.docs.map((e) {
+            _logger.d("Receiver: ${e.data().receiverId}");
+            return e.data();
+          }).toList();
         });
       },
     );

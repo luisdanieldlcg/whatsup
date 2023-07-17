@@ -21,7 +21,6 @@ class ChatPage extends ConsumerStatefulWidget {
 class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: Row(
