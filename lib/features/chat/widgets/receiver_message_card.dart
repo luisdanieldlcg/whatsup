@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/features/chat/widgets/message_display.dart';
 
 class ReceiverMessageCard extends StatelessWidget {
   final MessageModel message;
@@ -9,6 +11,17 @@ class ReceiverMessageCard extends StatelessWidget {
     super.key,
     required this.message,
   });
+  EdgeInsets get messagePadding {
+    if (message.type == ChatMessageType.text) {
+      return EdgeInsets.zero;
+    }
+    return const EdgeInsets.only(
+      left: 0.0,
+      top: 10,
+      right: 0,
+      bottom: 1,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +37,10 @@ class ReceiverMessageCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: ListTile(
-            title: Text(message.message),
+            title: Padding(
+              padding: messagePadding,
+              child: MessageDisplay(type: message.type, message: message.message),
+            ),
             // add date time
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 10),

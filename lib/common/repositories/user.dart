@@ -78,7 +78,7 @@ class UserRepository {
       String profileImage = await avatar.match(
         () async => kDefaultAvatarUrl,
         (file) async {
-          final url = await _ref.read(storageRepositoryProvider).uploadImage(
+          final url = await _ref.read(storageRepositoryProvider).uploadFile(
                 path: "$kUsersCollectionId/${userId.uid}/avatar",
                 file: avatar.unwrap(),
               );
@@ -139,4 +139,6 @@ class UserRepository {
   Stream<UserModel> userStream(String uid) {
     return users.doc(uid).snapshots().map((event) => event.data()!);
   }
+
+  Option<UserModel> get activeUser => _authRepository.currentUser;
 }

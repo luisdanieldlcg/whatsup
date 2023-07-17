@@ -9,7 +9,7 @@ import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:whatsup/startup.dart';
+import 'package:whatsup/features/startup/pages/startup.dart';
 
 import 'common/util/run_mode.dart';
 

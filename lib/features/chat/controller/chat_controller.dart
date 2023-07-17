@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/features/chat/repository/chat_repository.dart';
@@ -35,10 +38,29 @@ class ChatController {
   }) {
     ref.read(userFetchProvider).whenData((value) {
       if (value.isSome()) {
-        chatRepository.sendMessage(
+        chatRepository.sendTextMessage(
           sender: value.unwrap(),
           receiverId: receiverId,
           message: text,
+        );
+      }
+    });
+  }
+
+  void sendFile({
+    required BuildContext context,
+    required String receiverId,
+    required File file,
+    required ChatMessageType type,
+  }) {
+    ref.read(userFetchProvider).whenData((value) {
+      if (value.isSome()) {
+        chatRepository.sendFileMessage(
+          file: file,
+          receiverId: receiverId,
+          sender: value.unwrap(),
+          ref: ref,
+          type: type,
         );
       }
     });

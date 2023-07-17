@@ -3,16 +3,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/home/pages/home.dart';
+import 'package:whatsup/features/startup/controller/startup_controller.dart';
 import 'package:whatsup/features/welcome/pages/welcome.dart';
 
-class StartUp extends ConsumerWidget {
-  static final _logger = AppLogger.getLogger((StartUp).toString());
+class StartUp extends ConsumerStatefulWidget {
   const StartUp({
     super.key,
   });
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _StartUpState();
+}
+
+class _StartUpState extends ConsumerState<StartUp> with WidgetsBindingObserver {
+  static final _logger = AppLogger.getLogger((StartUp).toString());
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      ref.read(startUpControllerProvider).updateOnlineState(true);
+      return;
+    }
+    ref.read(startUpControllerProvider).updateOnlineState(false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ref.watch(userFetchProvider).when(
           data: (user) {
             return user.match(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
@@ -6,6 +8,7 @@ import 'package:whatsup/common/models/chat.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/auth.dart';
+import 'package:whatsup/common/repositories/storage.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/logger.dart';
@@ -14,19 +17,23 @@ final chatRepositoryProvider = Provider((ref) {
   return ChatRepository(
     user: ref.read(userRepositoryProvider),
     auth: ref.read(authRepositoryProvider),
+    storage: ref.read(storageRepositoryProvider),
   );
 }, name: (ChatRepository).toString());
 
 class ChatRepository {
   final UserRepository _db;
   final AuthRepository _auth;
+  final StorageRepository _storage;
   final Logger _logger = AppLogger.getLogger((ChatRepository).toString());
 
   ChatRepository({
     required UserRepository user,
     required AuthRepository auth,
+    required StorageRepository storage,
   })  : _db = user,
-        _auth = auth;
+        _auth = auth,
+        _storage = storage;
 
   Future<void> saveMessage({
     required String id,
@@ -82,7 +89,68 @@ class ChatRepository {
     await _db.userChats(userId).doc(messageReceiverId).set(senderChat);
   }
 
-  Future<void> sendMessage({
+  Future<void> sendFileMessage({
+    required File file,
+    required String receiverId,
+    required UserModel sender,
+    required Ref ref,
+    required ChatMessageType type,
+  }) async {
+    try {
+      final time = DateTime.now();
+      final messageId = const Uuid().v4();
+
+      String url = await _storage.uploadFile(
+        path: 'chat/${type.type}/${sender.uid}/$receiverId',
+        file: file,
+      );
+      final recvQuery = await _db.users.doc(receiverId).get();
+      final receiver = recvQuery.data();
+      if (receiver == null) {
+        _logger.e("Receiver not found. Chat could not be updated.");
+        return;
+      }
+
+      String message;
+      switch (type) {
+        case ChatMessageType.image:
+          message = '📷 Photo';
+          break;
+        case ChatMessageType.video:
+          message = '📸 Video';
+          break;
+        case ChatMessageType.audio:
+          message = '🎵 Audio';
+          break;
+        case ChatMessageType.gif:
+          message = 'GIF';
+          break;
+        default:
+          message = 'GIF';
+      }
+
+      updateChat(
+        sender: sender,
+        receiver: receiver,
+        messageReceiverId: receiverId,
+        messageTime: time,
+        message: message,
+      );
+
+      saveMessage(
+        id: messageId,
+        sender: sender,
+        receiver: receiver,
+        text: url,
+        time: time,
+        type: type,
+      );
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
+  Future<void> sendTextMessage({
     required UserModel sender,
     required String receiverId,
     required String message,

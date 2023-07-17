@@ -15,7 +15,7 @@ class StorageRepository {
     required FirebaseStorage storage,
   }) : _storage = storage;
 
-  Future<String> uploadImage({
+  Future<String> uploadFile({
     required String path,
     required File file,
   }) async {

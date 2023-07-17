@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/enum/message.dart';
+import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
 
 class ChatTextField extends ConsumerStatefulWidget {
@@ -16,6 +21,22 @@ class ChatTextField extends ConsumerStatefulWidget {
 class _ChatTextFieldState extends ConsumerState<ChatTextField> {
   bool isTyping = false;
   final messageController = TextEditingController();
+
+  void sendFile(File file, ChatMessageType type) async {
+    ref.read(chatControllerRepository).sendFile(
+          context: context,
+          receiverId: widget.receiverId,
+          file: file,
+          type: type,
+        );
+  }
+
+  void selectImage() async {
+    final maybeImage = await pickGalleryImage(context);
+    if (maybeImage.isSome()) {
+      sendFile(maybeImage.unwrap(), ChatMessageType.image);
+    }
+  }
 
   void sendText() {
     if (!isTyping) return;
@@ -58,6 +79,11 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
                   filled: true,
                   hintText: "Type a message",
                   isDense: false,
+                  suffixIcon: IconButton(
+                    splashRadius: 20.0,
+                    onPressed: selectImage,
+                    icon: const Icon(Icons.camera_alt),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide.none,

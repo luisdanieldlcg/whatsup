@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/features/chat/widgets/message_display.dart';
 
 class SenderMessageCard extends StatelessWidget {
   final MessageModel message;
@@ -9,6 +11,18 @@ class SenderMessageCard extends StatelessWidget {
     super.key,
     required this.message,
   });
+
+  EdgeInsets get messagePadding {
+    if (message.type == ChatMessageType.text) {
+      return EdgeInsets.zero;
+    }
+    return const EdgeInsets.only(
+      left: 0.0,
+      top: 10,
+      right: 0,
+      bottom: 1,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,63 +40,33 @@ class SenderMessageCard extends StatelessWidget {
           ),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: ListTile(
-            title: Text(message.message),
+            title: Padding(
+              padding: messagePadding,
+              child: MessageDisplay(type: message.type, message: message.message),
+            ),
             // add date time
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    DateFormat.Hm().format(message.timeSent),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.white60,
-                    ),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  DateFormat.Hm().format(message.timeSent),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white60,
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    message.isRead ? Icons.done_all : Icons.done,
-                    size: 20,
-                    color: message.isRead ? Colors.blue : Colors.white60,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Icon(
+                  message.isRead ? Icons.done_all : Icons.done,
+                  size: 20,
+                  color: message.isRead ? Colors.blue : Colors.white60,
+                ),
+              ],
             ),
           ),
-          // child: Stack(
-          //   children: [
-          //     ListTile(
-          //       title: Text(message.message),
-          //     ),
-          //     Positioned(
-          //       bottom: 0,
-          //       right: 10,
-          //       child: Row(
-          //         children: [
-          //           Text(
-          //             message.timeSent.toString(),
-          //             style: const TextStyle(
-          //               fontSize: 13,
-          //               color: Colors.white60,
-          //             ),
-          //           ),
-          //           const SizedBox(
-          //             width: 5,
-          //           ),
-          //           Icon(
-          //             message.isRead ? Icons.done_all : Icons.done,
-          //             size: 20,
-          //             color: message.isRead ? Colors.blue : Colors.white60,
-          //           ),
-          //         ],
-          //       ),
-          //     )
-          //   ],
-          // ),
         ),
       ),
     );

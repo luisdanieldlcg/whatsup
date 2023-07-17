@@ -7,3 +7,4 @@ const String kUsersCollectionId = "users";
 const String kChatsSubCollectionId = "chats";
 const String kMessagesSubCollectionId = "messages";
 const String kPhoneNumberField = "phoneNumber";
+const String kIsOnlineField = "isOnline";
