@@ -25,8 +25,11 @@ const kLightBgColor = Color.fromRGBO(255, 255, 255, 1);
 const kTextHighlightColor = Color.fromRGBO(58, 113, 253, 1);
 const kDarkAppBarColor = Color.fromRGBO(31, 44, 52, 1);
 const kUnselectedLabelColor = Color.fromRGBO(190, 196, 201, 1);
-const receiverMessageColor = Color.fromRGBO(37, 45, 49, 1);
-const senderMessageColor = Color.fromRGBO(5, 96, 98, 1);
+const kReceiverMessageColor = Color.fromRGBO(37, 45, 49, 1);
+const kSenderMessageColor = Color.fromRGBO(5, 96, 98, 1);
+const kDarkTextFieldBgColor = Color.fromRGBO(37, 45, 49, 1);
+const kLightTextFieldBgColor = Color.fromRGBO(245, 245, 245, 1);
+const kReplyMessageColor = Color.fromRGBO(31, 37, 40, 1);
 
 final lightTheme = ThemeData.light().copyWith(
   colorScheme: ColorScheme.fromSeed(

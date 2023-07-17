@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/chat.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/models/user.dart';
+import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/auth.dart';
 import 'package:whatsup/common/repositories/storage.dart';
 import 'package:whatsup/common/repositories/user.dart';
@@ -42,7 +44,9 @@ class ChatRepository {
     required String text,
     required DateTime time,
     required ChatMessageType type,
+    required Option<MessageReply> reply,
   }) async {
+    var x = reply.isNone() ? ChatMessageType.text : reply.unwrap().type;
     final newMsg = MessageModel(
       uid: id,
       senderId: sender.uid,
@@ -51,6 +55,13 @@ class ChatRepository {
       type: type,
       timeSent: time,
       isRead: false,
+      repliedMessage: reply.isNone() ? '' : reply.unwrap().message,
+      repliedTo: reply.isNone()
+          ? ''
+          : reply.unwrap().isSenderMessage
+              ? sender.name
+              : receiver.name,
+      repliedMessageType: reply.isNone() ? ChatMessageType.text : reply.unwrap().type,
     );
 
     await _db.chatMessages(userId: sender.uid, chatId: receiver.uid).doc(id).set(newMsg);
@@ -95,6 +106,7 @@ class ChatRepository {
     required UserModel sender,
     required Ref ref,
     required ChatMessageType type,
+    required Option<MessageReply> reply,
   }) async {
     try {
       final time = DateTime.now();
@@ -144,6 +156,7 @@ class ChatRepository {
         text: url,
         time: time,
         type: type,
+        reply: reply,
       );
     } catch (e) {
       _logger.e(e.toString());
@@ -154,6 +167,7 @@ class ChatRepository {
     required UserModel sender,
     required String receiverId,
     required String message,
+    required Option<MessageReply> reply,
   }) async {
     try {
       _logger.d("Sending message to $receiverId");
@@ -179,6 +193,7 @@ class ChatRepository {
         text: message,
         time: time,
         type: ChatMessageType.text,
+        reply: reply,
       );
     } catch (e) {
       _logger.e(e.toString());

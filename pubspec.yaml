@@ -44,6 +44,13 @@ dependencies:
   uuid: ^3.0.7
   intl: ^0.18.1
   cached_network_image: ^3.2.3
+  cached_video_player: ^2.0.4
+  emoji_picker_flutter: ^1.6.1
+  flutter_sound: ^9.2.13
+  path_provider: ^2.0.15
+  permission_handler: ^9.2.0
+  audioplayers: ^1.0.1
+  swipe_to: ^1.0.2
 
 dev_dependencies:
   flutter_test:

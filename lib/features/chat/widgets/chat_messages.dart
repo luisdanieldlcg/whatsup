@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:whatsup/common/enum/message.dart';
+import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/auth/controllers/auth.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
-import 'package:whatsup/features/chat/widgets/receiver_message_card.dart';
-import 'package:whatsup/features/chat/widgets/sender_message_card.dart';
+import 'package:whatsup/features/chat/widgets/message_card.dart';
 
 class ChatMessages extends ConsumerStatefulWidget {
   final String receiverId;
+  final String receiverName;
   const ChatMessages({
     super.key,
     required this.receiverId,
+    required this.receiverName,
   });
 
   @override
@@ -22,10 +26,27 @@ class ChatMessages extends ConsumerStatefulWidget {
 
 class _ChatMessagesState extends ConsumerState<ChatMessages> {
   final scroll = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
     scroll.dispose();
+  }
+
+  void onMessageSwipe(String msg, bool isMyMessage, ChatMessageType replyType, String to) {
+    ref.read(messageReplyProvider.notifier).update((state) => Some(
+          MessageReply(
+            repliedTo: to,
+            message: msg,
+            isSenderMessage: isMyMessage,
+            type: replyType,
+          ),
+        ));
   }
 
   @override
@@ -40,7 +61,6 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
         }
 
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          // scroll.jumpTo(scroll.position.maxScrollExtent);
           scroll.animateTo(
             scroll.position.maxScrollExtent,
             duration: const Duration(milliseconds: 100),
@@ -54,15 +74,16 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
             final message = messages[index];
             final isMyMessage =
                 message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
-            return isMyMessage
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 2, top: 2),
-                    child: SenderMessageCard(message: message),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(right: 16, bottom: 2, top: 2),
-                    child: ReceiverMessageCard(message: message),
-                  );
+            return MessageCard(
+              actor: isMyMessage ? Actor.sender : Actor.receiver,
+              model: message,
+              onRightSwipe: () => onMessageSwipe(
+                message.message,
+                isMyMessage,
+                message.type,
+                widget.receiverName,
+              ),
+            );
           },
         );
       },

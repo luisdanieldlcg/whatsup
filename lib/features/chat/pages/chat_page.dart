@@ -73,8 +73,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
       body: Column(
         children: [
-          Expanded(child: ChatMessages(receiverId: widget.otherUser.uid)),
-          ChatTextField(receiverId: widget.otherUser.uid)
+          Expanded(
+            child: ChatMessages(
+              receiverId: widget.otherUser.uid,
+              receiverName: widget.otherUser.name,
+            ),
+          ),
+          ChatTextField(
+            receiverId: widget.otherUser.uid,
+            receiverName: widget.otherUser.name,
+          )
         ],
       ),
     );

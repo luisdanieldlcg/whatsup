@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/enum/message.dart';
+import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/features/chat/repository/chat_repository.dart';
@@ -42,7 +44,9 @@ class ChatController {
           sender: value.unwrap(),
           receiverId: receiverId,
           message: text,
+          reply: ref.read(messageReplyProvider),
         );
+        ref.read(messageReplyProvider.notifier).update((state) => const None());
       }
     });
   }
@@ -61,7 +65,9 @@ class ChatController {
           sender: value.unwrap(),
           ref: ref,
           type: type,
+          reply: ref.read(messageReplyProvider),
         );
+        ref.read(messageReplyProvider.notifier).update((state) => const None());
       }
     });
   }
