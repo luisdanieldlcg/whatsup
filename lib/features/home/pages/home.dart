@@ -33,15 +33,29 @@ class _HomePageState extends ConsumerState<HomePage> {
             ],
           ),
           actions: [
+            // theme switcher
             IconButton(
+              splashRadius: kDefaultSplashRadius,
+              onPressed: () {
+                ref.read(themeNotifierProvider.notifier).toggle();
+              },
+              icon: themeMode == Brightness.light
+                  ? const Icon(Icons.nightlight_round)
+                  : const Icon(Icons.wb_sunny),
+            ),
+
+            IconButton(
+              splashRadius: kDefaultSplashRadius,
               onPressed: () {},
               icon: const Icon(Icons.photo_camera_outlined),
             ),
             IconButton(
+              splashRadius: kDefaultSplashRadius,
               onPressed: () {},
               icon: const Icon(Icons.search),
             ),
             IconButton(
+              splashRadius: kDefaultSplashRadius,
               onPressed: () {},
               icon: const Icon(Icons.more_vert),
             ),

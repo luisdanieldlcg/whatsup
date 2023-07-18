@@ -64,8 +64,9 @@ class MessageCard extends StatelessWidget {
                   const SizedBox(
                     width: 5,
                   ),
+                  // use double check icon if message is read
                   Icon(
-                    model.isRead ? Icons.done_all : Icons.done,
+                    model.isRead ? Icons.done_all : Icons.done_all,
                     size: 20,
                     color: model.isRead ? Colors.blue : Colors.white60,
                   ),
