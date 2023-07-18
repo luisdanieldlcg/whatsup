@@ -37,6 +37,23 @@ class ChatRepository {
         _auth = auth,
         _storage = storage;
 
+  Future<void> markMessageAsSeen({
+    required String receiverId,
+    required String messageId,
+  }) async {
+    try {
+      final userId = _auth.currentUser.unwrap().uid;
+      await _db.chatMessages(userId: userId, chatId: receiverId).doc(messageId).update({
+        'isRead': true,
+      });
+      await _db.chatMessages(userId: receiverId, chatId: userId).doc(messageId).update({
+        'isRead': true,
+      });
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
   Future<void> saveMessage({
     required String id,
     required UserModel sender,
@@ -46,7 +63,6 @@ class ChatRepository {
     required ChatMessageType type,
     required Option<MessageReply> reply,
   }) async {
-    var x = reply.isNone() ? ChatMessageType.text : reply.unwrap().type;
     final newMsg = MessageModel(
       uid: id,
       senderId: sender.uid,

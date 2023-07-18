@@ -65,11 +65,18 @@ class MessageCard extends StatelessWidget {
                     width: 5,
                   ),
                   // use double check icon if message is read
+                  // Icon(
+                  //   model.isRead ? Icons.done_all : Icons.done,
+                  //   size: 20,
+                  //   color: model.isRead ? Colors.blue : Colors.white60,
+                  // ),
+                  // check if message is read if the actor is the sender
                   Icon(
-                    model.isRead ? Icons.done_all : Icons.done_all,
+                    Icons.done_all,
                     size: 20,
-                    color: model.isRead ? Colors.blue : Colors.white60,
-                  ),
+                    color:
+                        actor == Actor.sender && model.isRead ? Colors.lightBlue : Colors.white60,
+                  )
                 ],
               ),
             ),

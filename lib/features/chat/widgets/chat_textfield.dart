@@ -179,7 +179,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
   }
 
   void sendFile(File file, ChatMessageType type) async {
-    ref.read(chatControllerRepository).sendFile(
+    ref.read(chatControllerProvider).sendFile(
           context: context,
           receiverId: widget.receiverId,
           file: file,
@@ -218,7 +218,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
       });
     } else {
       // user is typing
-      ref.read(chatControllerRepository).sendText(
+      ref.read(chatControllerProvider).sendText(
             context: context,
             text: messageController.text,
             receiverId: widget.receiverId,

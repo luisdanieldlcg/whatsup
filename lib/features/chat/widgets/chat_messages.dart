@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/enum/message.dart';
+import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
@@ -72,6 +73,8 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
           itemCount: messages.length,
           itemBuilder: (context, index) {
             final message = messages[index];
+            tryMarkMessageAsSeen(message);
+
             final isMyMessage =
                 message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
             return MessageCard(
@@ -92,5 +95,15 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
       ),
       loading: () => const WorkProgressIndicator(),
     );
+  }
+
+  void tryMarkMessageAsSeen(MessageModel message) {
+    final activeUser = ref.read(authControllerProvider).currentUser.unwrap().uid;
+    if (!message.isRead && message.recvId == activeUser) {
+      ref.read(chatControllerProvider).markMessageAsSeen(
+            receiverId: widget.receiverId,
+            messageId: message.uid,
+          );
+    }
   }
 }

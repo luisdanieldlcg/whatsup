@@ -9,7 +9,7 @@ import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/features/chat/repository/chat_repository.dart';
 
-final chatControllerRepository = Provider((ref) {
+final chatControllerProvider = Provider((ref) {
   return ChatController(
     chatRepository: ref.read(chatRepositoryProvider),
     ref: ref,
@@ -32,6 +32,16 @@ class ChatController {
     required this.chatRepository,
     required this.ref,
   });
+
+  void markMessageAsSeen({
+    required String receiverId,
+    required String messageId,
+  }) {
+    chatRepository.markMessageAsSeen(
+      receiverId: receiverId,
+      messageId: messageId,
+    );
+  }
 
   void sendText({
     required BuildContext context,
