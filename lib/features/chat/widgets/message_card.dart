@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:whatsup/common/enum/message.dart';
@@ -11,7 +12,7 @@ enum Actor {
   receiver,
 }
 
-class MessageCard extends StatelessWidget {
+class MessageCard extends ConsumerWidget {
   final Actor actor;
   final MessageModel model;
   final VoidCallback onRightSwipe;
@@ -24,7 +25,7 @@ class MessageCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SwipeTo(
       animationDuration: const Duration(milliseconds: 85),
       onRightSwipe: onRightSwipe,
@@ -38,11 +39,11 @@ class MessageCard extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
-              color: actor == Actor.sender ? kSenderMessageColor : kReceiverMessageColor,
+              color: getMessageBoxColor(ref),
             ),
             child: ListTile(
               contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 3),
-              title: messageContent,
+              title: getMessageContent(ref),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,7 +51,10 @@ class MessageCard extends StatelessWidget {
                   if (model.repliedMessage.isNotEmpty) ...{
                     Padding(
                       padding: const EdgeInsets.only(top: 12, left: 8, bottom: 4),
-                      child: Text(model.message),
+                      child: Text(
+                        model.message,
+                        style: TextStyle(color: Colors.grey.shade200),
+                      ),
                     ),
                     const Spacer(),
                   },
@@ -64,13 +68,6 @@ class MessageCard extends StatelessWidget {
                   const SizedBox(
                     width: 5,
                   ),
-                  // use double check icon if message is read
-                  // Icon(
-                  //   model.isRead ? Icons.done_all : Icons.done,
-                  //   size: 20,
-                  //   color: model.isRead ? Colors.blue : Colors.white60,
-                  // ),
-                  // check if message is read if the actor is the sender
                   Icon(
                     Icons.done_all,
                     size: 20,
@@ -86,7 +83,16 @@ class MessageCard extends StatelessWidget {
     );
   }
 
-  Widget get messageContent {
+  Color getMessageBoxColor(WidgetRef ref) {
+    final isDark = ref.watch(themeNotifierProvider) == Brightness.dark;
+    if (actor == Actor.sender) {
+      return isDark ? kSenderMessageColor : kSenderMessageColor.withOpacity(0.8);
+    }
+    return kReceiverMessageColor.withOpacity(0.7);
+  }
+
+  Widget getMessageContent(WidgetRef ref) {
+    final isDark = ref.watch(themeNotifierProvider) == Brightness.dark;
     final isReply = model.repliedMessage.isNotEmpty;
     if (isReply) {
       return SizedBox(
@@ -94,24 +100,24 @@ class MessageCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(top: 6, bottom: 12, left: 12, right: 0),
           decoration: BoxDecoration(
-            color: kReplyMessageColor.withOpacity(0.6),
+            color: isDark
+                ? actor == Actor.receiver
+                    ? const Color.fromARGB(255, 29, 28, 28).withOpacity(0.3)
+                    : kReplyMessageColor.withOpacity(0.6)
+                : kReplyMessageColor.withOpacity(0.4),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    model.repliedTo,
-                    style: const TextStyle(color: kPrimaryColor),
-                  ),
-                ],
+              Text(
+                model.repliedTo,
+                style: const TextStyle(color: kPrimaryColor),
               ),
               const SizedBox(height: 8),
               Text(
                 model.repliedMessage,
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.grey.shade300),
               ),
             ],
           ),

@@ -19,10 +19,11 @@ class ReplyContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reply = ref.watch(messageReplyProvider).unwrap();
+    final isDark = ref.watch(themeNotifierProvider) == Brightness.dark;
     return Container(
-      decoration: const BoxDecoration(
-        color: kDarkTextFieldBgColor,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: isDark ? kDarkTextFieldBgColor : Colors.white,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
           bottomLeft: Radius.zero,
@@ -35,7 +36,9 @@ class ReplyContainer extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.only(top: 0, bottom: 12, left: 12, right: 0),
           decoration: BoxDecoration(
-            color: kReplyMessageColor.withOpacity(0.9),
+            color: isDark
+                ? kReplyMessageColor.withOpacity(0.9)
+                : const Color.fromARGB(255, 229, 229, 229).withOpacity(0.9),
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Column(
@@ -45,16 +48,16 @@ class ReplyContainer extends ConsumerWidget {
                 children: [
                   Text(
                     reply.isSenderMessage ? 'You' : replyingTo,
-                    style: const TextStyle(color: kPrimaryColor),
+                    style: const TextStyle(color: kPrimaryColor, fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
                   IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () => cancelReply(ref),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.close,
                       size: 16,
-                      color: Colors.grey,
+                      color: Colors.grey.shade700,
                     ),
                   )
                 ],
@@ -62,7 +65,9 @@ class ReplyContainer extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 reply.message,
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: isDark ? Colors.grey : Colors.grey.shade700,
+                ),
               ),
             ],
           ),

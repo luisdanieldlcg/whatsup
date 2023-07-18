@@ -42,6 +42,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
   Widget build(BuildContext context) {
     final reply = ref.watch(messageReplyProvider);
     final isShowingReply = reply.isSome();
+    final theme = ref.watch(themeNotifierProvider);
     return Column(
       children: [
         Row(
@@ -70,7 +71,8 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
                           });
                         },
                         decoration: InputDecoration(
-                          fillColor: kDarkTextFieldBgColor,
+                          fillColor:
+                              theme == Brightness.dark ? kDarkTextFieldBgColor : Colors.white,
                           filled: true,
                           hintText: "Type a message",
                           isDense: false,

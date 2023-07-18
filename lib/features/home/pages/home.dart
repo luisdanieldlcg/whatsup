@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/features/home/widgets/chat_list.dart';
+import 'package:whatsup/features/status/pages/status_page.dart';
 import 'package:whatsup/router.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -26,7 +27,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             labelColor: themeMode == Brightness.light ? Colors.white : kPrimaryColor,
             unselectedLabelColor: kUnselectedLabelColor,
             indicatorWeight: 4,
-            tabs: [
+            tabs: const [
               Tab(text: "Chat"),
               Tab(text: "Status"),
               Tab(text: "Calls"),
@@ -64,7 +65,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         body: const TabBarView(
           children: [
             ChatList(),
-            Center(child: Text("Status")),
+            StatusList(),
             Center(child: Text("Calls")),
           ],
         ),
