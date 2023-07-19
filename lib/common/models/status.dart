@@ -38,6 +38,7 @@ class StatusModel {
   final String statusId;
   final List<String> whitelist;
   final StatusType lastStatus;
+  final List<String> seenBy;
 
   const StatusModel({
     required this.uid,
@@ -50,6 +51,7 @@ class StatusModel {
     required this.statusId,
     required this.whitelist,
     required this.lastStatus,
+    required this.seenBy,
   });
 
   StatusModel copyWith({
@@ -75,6 +77,7 @@ class StatusModel {
       statusId: statusId ?? this.statusId,
       whitelist: whitelist ?? this.whitelist,
       lastStatus: lastStatus ?? this.lastStatus,
+      seenBy: seenBy,
     );
   }
 
@@ -89,7 +92,8 @@ class StatusModel {
       'profileImage': profileImage,
       'statusId': statusId,
       'whitelist': whitelist,
-      'lastStatus': lastStatus.toString(),
+      'lastStatus': lastStatus.name.toString(),
+      'seenBy': seenBy,
     };
   }
 
@@ -97,9 +101,11 @@ class StatusModel {
     final photos = map['photoUrl'] as List<dynamic>;
     // final texts = map['texts'] as List<dynamic>;
     final whitelist = map['whitelist'] as List<dynamic>;
+    final seenBy = map['seenBy'] as List<dynamic>;
 
     final photosAsString = photos.map((e) => e as String).toList();
     final whitelistAsString = whitelist.map((e) => e as String).toList();
+    final seenByAsString = seenBy.map((e) => e as String).toList();
     return StatusModel(
       uid: map['uid'] as String,
       username: map['username'] as String,
@@ -111,12 +117,13 @@ class StatusModel {
       statusId: map['statusId'] as String,
       whitelist: whitelistAsString,
       lastStatus: (map['lastStatus'] as String).intoStatus(),
+      seenBy: seenByAsString,
     );
   }
 
   @override
   String toString() {
-    return 'StatusModel(uid: $uid, username: $username, phoneNumber: $phoneNumber, photoUrl: $photoUrl, texts: $texts, createdAt: $createdAt, profileImage: $profileImage, statusId: $statusId, whitelist: $whitelist)';
+    return 'StatusModel(uid: $uid, username: $username, phoneNumber: $phoneNumber, photoUrl: $photoUrl, texts: $texts, createdAt: $createdAt, profileImage: $profileImage, statusId: $statusId, whitelist: $whitelist, lastStatus: $lastStatus, seenBy: $seenBy)';
   }
 
   @override

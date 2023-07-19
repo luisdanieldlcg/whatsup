@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
+import 'package:async/async.dart';
 
 final statusRepositoryProvider = Provider((ref) {
   return StatusRepository(
@@ -38,6 +40,35 @@ class StatusRepository {
   })  : _db = db,
         _auth = auth,
         _ref = ref;
+
+  Future<void> markSeenByCurrentUser({
+    required String statusId,
+    required String userPhoneNumber,
+  }) async {
+    try {
+      
+      await _db.statuses.doc(statusId).update({
+        'seenBy': FieldValue.arrayUnion([userPhoneNumber]),
+      });
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
+
+  Future<void> deleteUserStatus({
+    required String statusId,
+    required VoidCallback onSuccess,
+    required VoidCallback onError,
+  }) async {
+    try {
+      await _db.statuses.doc(statusId).delete();
+      onSuccess();
+    } catch (e, trace) {
+      _logger.e(e);
+      _logger.d(trace);
+      onError();
+    }
+  }
 
   Future<void> uploadTextStatus({
     required String username,
@@ -63,39 +94,36 @@ class StatusRepository {
           whitelist.add(model.uid);
         }
 
-        Map<String, int> texts = {};
-
         final existingStatuses = await _db.userStatuses(activeUser).get();
         if (existingStatuses.docs.isNotEmpty) {
           // We have an existing status
           final status = existingStatuses.docs[0].data();
-          // texts = [...status.texts, text];
-          texts = {...status.texts, text.text: text.bgColor.value};
           await _db.statuses.doc(existingStatuses.docs[0].id).update({
-            'texts': texts,
-            'lastStatus': StatusType.text.name,
+            'texts': {
+              ...status.texts,
+              text.text: text.bgColor.value,
+            },
+            'lastStatus': StatusType.text.name.toString(),
           });
-          return;
         } else {
           // We don't have an existing status
-          texts = {
-            text.text: text.bgColor.value,
-          };
+          final status = StatusModel(
+            uid: activeUser,
+            username: username,
+            phoneNumber: phoneNumber,
+            photoUrl: [],
+            createdAt: DateTime.now(),
+            profileImage: profileImage,
+            statusId: statusId,
+            texts: {
+              text.text: text.bgColor.value,
+            },
+            whitelist: whitelist,
+            lastStatus: StatusType.text,
+            seenBy: const [],
+          );
+          return _db.statuses.doc(statusId).set(status);
         }
-
-        final status = StatusModel(
-          uid: activeUser,
-          username: username,
-          phoneNumber: phoneNumber,
-          photoUrl: [],
-          createdAt: DateTime.now(),
-          profileImage: profileImage,
-          statusId: statusId,
-          texts: texts,
-          whitelist: whitelist,
-          lastStatus: StatusType.text,
-        );
-        return _db.statuses.doc(statusId).set(status);
       }
     } catch (e, stack) {
       _logger.e(e);
@@ -131,37 +159,32 @@ class StatusRepository {
           whitelist.add(model.uid);
         }
 
-        List<String> statusUrls = [];
         final existingStatuses = await _db.userStatuses(activeUser).get();
 
         if (existingStatuses.docs.isNotEmpty) {
           // We have an existing status
           final status = existingStatuses.docs[0].data();
-          statusUrls = [...status.photoUrl, url];
           await _db.statuses.doc(existingStatuses.docs[0].id).update({
-            'photoUrl': statusUrls,
-            'lastStatus': StatusType.image.name,
+            'photoUrl': [...status.photoUrl, url],
+            'lastStatus': StatusType.image.name.toString(),
           });
-          return;
         } else {
-          // We don't have an existing status
-          statusUrls = [url];
+          final status = StatusModel(
+            uid: activeUser,
+            username: username,
+            phoneNumber: phoneNumber,
+            photoUrl: [url],
+            createdAt: DateTime.now(),
+            profileImage: profileImage,
+            statusId: statusId,
+            texts: {},
+            whitelist: whitelist,
+            lastStatus: StatusType.image,
+            seenBy: const [],
+          );
+
+          await _db.statuses.doc(statusId).set(status);
         }
-
-        final status = StatusModel(
-          uid: activeUser,
-          username: username,
-          phoneNumber: phoneNumber,
-          photoUrl: statusUrls,
-          createdAt: DateTime.now(),
-          profileImage: profileImage,
-          statusId: statusId,
-          texts: {},
-          whitelist: whitelist,
-          lastStatus: StatusType.image,
-        );
-
-        await _db.statuses.doc(statusId).set(status);
       }
     } catch (e) {
       _logger.e(e);
@@ -169,11 +192,45 @@ class StatusRepository {
     }
   }
 
-  Stream<List<StatusModel>> userStatus() {
+  Stream<Option<StatusModel>> userStatus() {
     final String activeUser = _auth.currentUser.unwrap().uid;
     return _db.userStatuses(activeUser).snapshots().map((query) {
-      return query.docs.map((doc) => doc.data()).toList();
+      if (query.docs.isEmpty) {
+        return none();
+      }
+      return some(query.docs[0].data());
     });
+  }
+
+  Stream<List<StatusModel>> getContactStatus(List<Contact> userContacts) {
+    final List<String> whitelist = [];
+    // consider filter out contacts that are registered not on the app or I blocked
+    // as a future feature.
+    for (Contact entry in userContacts) {
+      whitelist.add(entry.phones[0].normalizedNumber);
+    }
+    if (whitelist.isEmpty) {
+      return Stream.value([]);
+    }
+
+    final List<Stream<List<StatusModel>>> statuses = [];
+
+    for (String contactPhone in whitelist) {
+      final Stream<List<StatusModel>> contactStatus =
+          _db.statuses.where(kPhoneNumberField, isEqualTo: contactPhone).snapshots().map((query) {
+        return query.docs
+            .map((status) => status.data())
+            .filter((t) => t.whitelist.contains(_auth.currentUser.unwrap().uid))
+            .toList();
+      });
+      statuses.add(contactStatus);
+    }
+
+    final streamGroup = StreamGroup<List<StatusModel>>();
+    for (Stream<List<StatusModel>> statusStream in statuses) {
+      streamGroup.add(statusStream);
+    }
+    return streamGroup.stream;
   }
 
   Future<List<StatusModel>> getStatus() async {

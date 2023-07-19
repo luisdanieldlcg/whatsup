@@ -102,7 +102,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
           void pickStatusImage() async {
             final image = await pickGalleryImage(context);
             image.match(
-              () => showSnackbar(context, 'No image selected'),
+              () => {},
               (file) {
                 Navigator.pushNamed(context, PageRouter.statusImageConfirm, arguments: file);
               },

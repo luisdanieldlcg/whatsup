@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:story_view/story_view.dart';
 import 'package:whatsup/common/models/status.dart';
+import 'package:whatsup/features/status/controller/status_controller.dart';
 
 class StatusViewerPage extends ConsumerStatefulWidget {
   final StatusModel status;
@@ -17,10 +18,18 @@ class StatusViewerPage extends ConsumerStatefulWidget {
 class _StatusViewPageState extends ConsumerState<StatusViewerPage> {
   final controller = StoryController();
   final List<StoryItem> storyItems = [];
+
   @override
   void initState() {
     super.initState();
+    markDirty();
     initAllStatus();
+  }
+
+  void markDirty() {
+    ref.read(statusControllerProvider).markSeenByCurrentUser(
+          statusId: widget.status.statusId,
+        );
   }
 
   void initAllStatus() {

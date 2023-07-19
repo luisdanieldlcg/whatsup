@@ -7,6 +7,10 @@ final contactRepositoryProvider = Provider((ref) {
   return ContactRepository(db: ref.read(userRepositoryProvider));
 });
 
+final getAllContactProvider = FutureProvider<List<Contact>>((ref) async {
+  return await ref.watch(contactRepositoryProvider).getAll();
+});
+
 class ContactRepository {
   final logger = AppLogger.getLogger((ContactRepository).toString());
   final UserRepository _db;

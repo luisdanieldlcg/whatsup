@@ -18,8 +18,10 @@ extension StatusConverter on String {
     switch (this) {
       case "image":
         return StatusType.image;
-      default:
+      case "text":
         return StatusType.text;
+      default:
+        return StatusType.image;
     }
   }
 }
