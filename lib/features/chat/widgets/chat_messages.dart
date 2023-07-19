@@ -74,7 +74,7 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
           itemBuilder: (context, index) {
             final message = messages[index];
             tryMarkMessageAsSeen(message);
-
+    
             final isMyMessage =
                 message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
             return MessageCard(

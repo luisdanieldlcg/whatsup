@@ -80,7 +80,6 @@ class SelectContactPage extends ConsumerWidget {
   void goToContact(WidgetRef ref, Contact con, BuildContext context) {
     ref.read(selectContactProvider).findContact(
           selected: con,
-          context: context,
           contactNotFound: () => showSnackbar(
             context,
             "This contact is not registered on $kAppName",

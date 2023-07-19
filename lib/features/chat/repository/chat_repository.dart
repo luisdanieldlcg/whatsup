@@ -222,7 +222,6 @@ class ChatRepository {
       (userModel) {
         return _db.userChats(userModel.uid).snapshots().map((event) {
           return event.docs.map((e) {
-            _logger.d("Receiver: ${e.data().receiverId}");
             return e.data();
           }).toList();
         });

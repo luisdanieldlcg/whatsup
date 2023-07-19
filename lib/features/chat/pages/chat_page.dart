@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/chat/widgets/chat_messages.dart';
@@ -27,6 +28,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final liveReceiver = ref.watch(userStream(widget.otherUser.uid));
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+          splashRadius: kDefaultSplashRadius,
+        ),
         title: liveReceiver.when(
           data: (recvUserModel) {
             return Row(

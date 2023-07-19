@@ -40,3 +40,7 @@ Future<Option<File>> pickVideoFromGallery(BuildContext context) async {
     return const Option.none();
   }
 }
+
+String removePhoneDecoration(String phone) {
+  return phone.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '').replaceAll('-', '');
+}

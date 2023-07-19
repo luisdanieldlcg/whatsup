@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/enum/message.dart';
+import 'package:whatsup/common/enum/status.dart';
 
 extension OptionHelper<T> on Option<T> {
   /// Returns the option's value if it is `Some(value)`.
@@ -9,6 +10,17 @@ extension OptionHelper<T> on Option<T> {
   /// you can call `unwrap()` to get the value.
   T unwrap() {
     return getOrElse(() => throw "called `Option.unwrap()` on a `None` value");
+  }
+}
+
+extension StatusConverter on String {
+  StatusType intoStatus() {
+    switch (this) {
+      case "image":
+        return StatusType.image;
+      default:
+        return StatusType.text;
+    }
   }
 }
 

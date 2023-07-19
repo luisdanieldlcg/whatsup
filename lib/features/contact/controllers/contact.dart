@@ -28,7 +28,6 @@ class SelectContactController {
 
   void findContact({
     required Contact selected,
-    required BuildContext context,
     required VoidCallback contactNotFound,
     required Function(UserModel user) contactFound,
   }) async {

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/home/widgets/chat_list.dart';
-import 'package:whatsup/features/status/pages/status_page.dart';
+import 'package:whatsup/features/status/widgets/status_list.dart';
 import 'package:whatsup/router.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -13,16 +15,32 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMixin {
+  late final TabController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TabController(length: 3, vsync: this);
+
+    // update the state of the tab controller when the tab changes
+    controller.addListener(() {
+      if (controller.indexIsChanging) {
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeNotifierProvider);
     return DefaultTabController(
-      length: 3,
+      length: controller.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text(kAppName),
           bottom: TabBar(
+            controller: controller,
             indicatorColor: themeMode == Brightness.light ? Colors.white : kPrimaryColor,
             labelColor: themeMode == Brightness.light ? Colors.white : kPrimaryColor,
             unselectedLabelColor: kUnselectedLabelColor,
@@ -62,21 +80,69 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ],
         ),
-        body: const TabBarView(
-          children: [
+        body: TabBarView(
+          controller: controller,
+          children: const [
             ChatList(),
             StatusList(),
             Center(child: Text("Calls")),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: kPrimaryColor,
-          onPressed: () {
-            Navigator.pushNamed(context, PageRouter.selectContact);
-          },
-          child: const Icon(Icons.comment, color: Colors.white),
-        ),
+        floatingActionButton: floatingWidgets,
       ),
+    );
+  }
+
+  Widget get floatingWidgets {
+    final lowerButton = FloatingActionButton(
+      backgroundColor: kPrimaryColor,
+      heroTag: 'lower',
+      onPressed: () {
+        if (controller.index == 1) {
+          void pickStatusImage() async {
+            final image = await pickGalleryImage(context);
+            image.match(
+              () => showSnackbar(context, 'No image selected'),
+              (file) {
+                Navigator.pushNamed(context, PageRouter.statusImageConfirm, arguments: file);
+              },
+            );
+          }
+
+          pickStatusImage();
+        } else {
+          Navigator.pushNamed(context, PageRouter.selectContact);
+        }
+      },
+      child: Icon(controller.index == 0 ? Icons.comment : Icons.photo_camera, color: Colors.white),
+    );
+    return Column(
+      children: [
+        const Spacer(),
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 50),
+              opacity: controller.index == 1 ? 1 : 0,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 185),
+                height: controller.index == 1 ? 185 : 56,
+                child: FloatingActionButton(
+                  heroTag: 'writer',
+                  onPressed: () {
+                    Navigator.pushNamed(context, PageRouter.statusWriter);
+                  },
+                  backgroundColor: kDarkTextFieldBgColor,
+                  mini: true,
+                  child: const Icon(Icons.edit),
+                ),
+              ),
+            ),
+            lowerButton,
+          ],
+        ),
+      ],
     );
   }
 }

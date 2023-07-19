@@ -21,6 +21,7 @@ class _StartUpState extends ConsumerState<StartUp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    ref.read(startUpControllerProvider).updateOnlineState(true);
   }
 
   @override

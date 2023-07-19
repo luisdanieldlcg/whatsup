@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/models/chat.dart';
 import 'package:whatsup/common/models/message.dart';
+import 'package:whatsup/common/models/status.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/auth.dart';
@@ -135,6 +136,15 @@ class UserRepository {
           toFirestore: (message, _) => message.toMap(),
         );
   }
+
+  CollectionReference<StatusModel> get statuses {
+    return _db.collection(kStatusSubCollectionId).withConverter<StatusModel>(
+          fromFirestore: (snapshot, _) => StatusModel.fromMap(snapshot.data()!),
+          toFirestore: (status, _) => status.toMap(),
+        );
+  }
+
+  Query<StatusModel> userStatuses(String userId) => statuses.where('uid', isEqualTo: userId);
 
   Stream<UserModel> userStream(String uid) {
     return users.doc(uid).snapshots().map((event) => event.data()!);
