@@ -8,7 +8,6 @@ import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/call/controller/call_controller.dart';
-import 'package:whatsup/features/call/pages/incoming_call.dart';
 import 'package:whatsup/features/call/widgets/call_invitation_button.dart';
 import 'package:whatsup/features/chat/widgets/chat_messages.dart';
 import 'package:whatsup/features/chat/widgets/chat_textfield.dart';
@@ -97,19 +96,21 @@ class ChatPage extends ConsumerWidget {
                 loading: () => const WorkProgressIndicator(),
               ),
         actions: [
-          liveReceiver.when(
-            data: (participant) {
-              return CallInvitationSendButton(
-                isVideoCall: true,
-                participants: [participant],
-                onPressed: () {
-                  makeCall(ref, context);
-                },
-              );
-            },
-            error: (err, trace) => UnhandledError(error: err.toString()),
-            loading: () => const SizedBox(),
-          ),
+          if (!isGroup) ...{
+            liveReceiver.when(
+              data: (participant) {
+                return CallInvitationSendButton(
+                  isVideoCall: true,
+                  participants: [participant],
+                  onPressed: () {
+                    makeCall(ref, context);
+                  },
+                );
+              },
+              error: (err, trace) => UnhandledError(error: err.toString()),
+              loading: () => const SizedBox(),
+            ),
+          },
           IconButton(
             splashRadius: kDefaultSplashRadius,
             onPressed: () {},

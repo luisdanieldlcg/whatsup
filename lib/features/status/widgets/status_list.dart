@@ -37,18 +37,34 @@ class StatusList extends ConsumerWidget {
           data: (contacts) {
             final liveContactStatus = ref.watch(contactStatusStreamProvider(contacts));
             return liveContactStatus.when(
-              data: (contact) {
+              data: (statusList) {
+                if (statusList.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 100),
+                        Icon(Icons.photo_camera_outlined, size: 84),
+                        SizedBox(height: 25),
+                        Text('No status updates'),
+                      ],
+                    ),
+                  );
+                }
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: contact.length,
+                  itemCount: statusList.length,
                   itemBuilder: (context, index) {
-                    final statusItem = contact[index];
+                    final statusItem = statusList[index];
                     final createdAt = statusItem.createdAt;
                     final hasPassedOneMinute = DateTime.now().difference(createdAt).inMinutes > 1;
                     return ListTile(
                       onTap: () {
-                        Navigator.pushNamed(context, PageRouter.statusViewer,
-                            arguments: statusItem);
+                        Navigator.pushNamed(
+                          context,
+                          PageRouter.statusViewer,
+                          arguments: statusItem,
+                        );
                       },
                       leading: loadAvatar(ref, statusItem),
                       title: Text(statusItem.username),

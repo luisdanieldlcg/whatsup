@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>334610463294-031hmil68nu88sd7ej5dlk0eqq4c3579.apps.googleusercontent.com</string>
+	<string>250181170606-58u9dvliagq9k05al362fmr8dr21vof4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.334610463294-031hmil68nu88sd7ej5dlk0eqq4c3579</string>
+	<string>com.googleusercontent.apps.250181170606-58u9dvliagq9k05al362fmr8dr21vof4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>250181170606-jnnqet3h8vetggruqe9v3lvo76grl9k7.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAH2izGlscHBocFbdF_eG2qNjOafRBoQU8</string>
+	<string>AIzaSyCXsOXS4tnSRoJ1IwShlf18mnELcjLvBc4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>334610463294</string>
+	<string>250181170606</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.whatsup.whatsup</string>
+	<string>com.example.flutterFirebaseTemplate</string>
 	<key>PROJECT_ID</key>
-	<string>whatsup-4d1fa</string>
+	<string>whatsup-37980</string>
 	<key>STORAGE_BUCKET</key>
-	<string>whatsup-4d1fa.appspot.com</string>
+	<string>whatsup-37980.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:334610463294:ios:8ffdbd71a7283f30c8af6f</string>
+	<string>1:250181170606:ios:bb9f0df46b72e6e61a043f</string>
 </dict>
 </plist>

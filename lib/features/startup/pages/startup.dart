@@ -56,6 +56,7 @@ class _StartUpState extends ConsumerState<StartUp> with WidgetsBindingObserver {
                   userID: user.uid,
                   userName: user.name,
                   ref: ref,
+                  context: context,
                 );
                 return const HomePage();
               },

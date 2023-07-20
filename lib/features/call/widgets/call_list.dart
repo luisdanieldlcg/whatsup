@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/auth.dart';
-import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/call/controller/call_controller.dart';
-import 'package:whatsup/features/call/widgets/call_invitation_button.dart';
 
 class CallList extends ConsumerStatefulWidget {
   const CallList({super.key});
@@ -27,10 +24,11 @@ class _CallListState extends ConsumerState<CallList> {
         if (calls.isEmpty) {
           return const Column(
             children: [
-              SizedBox(height: 200),
-              Center(
-                child: Text("No recent calls"),
-              ),
+              Spacer(),
+              Icon(Icons.call, size: 84),
+              SizedBox(height: 25),
+              Text('No recent calls'),
+              Spacer(flex: 2),
             ],
           );
         }
@@ -73,7 +71,11 @@ class _CallListState extends ConsumerState<CallList> {
                     children: [
                       // add arrow icon if it was missed or declined
                       Icon(
-                        Icons.arrow_outward_outlined,
+                        wasMadeByMe
+                            ? Icons.call_made
+                            : wasDeclinedOrMissed
+                                ? Icons.call_missed
+                                : Icons.call_received,
                         color: arrowColor(),
                         size: 18,
                       ),

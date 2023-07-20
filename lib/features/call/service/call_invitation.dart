@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/config.dart';
 import 'package:whatsup/features/call/repository/call_repository.dart';
+import 'package:whatsup/router.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
@@ -12,6 +13,7 @@ class CallInvitationService {
     required String userID,
     required String userName,
     required WidgetRef ref,
+    required BuildContext context,
   }) {
     ZegoUIKitPrebuiltCallInvitationService().init(
       appID: AppConfig.zegoCloudAppId,
@@ -29,6 +31,11 @@ class CallInvitationService {
           ref.read(callRepositoryProvider).markAsDeclined(
                 userID,
               );
+        },
+        onOutgoingCallDeclined: (callId, user) {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
         },
       ),
     );

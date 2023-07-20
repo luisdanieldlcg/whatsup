@@ -4,17 +4,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
-import 'package:whatsup/config.dart';
-import 'package:whatsup/features/auth/pages/login.dart';
 import 'package:whatsup/features/call/service/call_invitation.dart';
-import 'package:whatsup/features/home/pages/home.dart';
 import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:whatsup/features/startup/pages/startup.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import 'common/util/run_mode.dart';
 
@@ -27,7 +22,7 @@ void main() async {
   CallInvitationService.attachNavigatorKey(navigatorKey);
   CallInvitationService.useSysCallUI();
   WidgetsFlutterBinding.ensureInitialized();
- 
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

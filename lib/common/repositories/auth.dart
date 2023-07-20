@@ -66,6 +66,7 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       onError(_getOtpErrorMsg(e.code));
     } catch (e) {
+      logger.e(e.toString());
       onError(_getOtpErrorMsg(e.toString()));
     }
   }
@@ -88,6 +89,8 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       onError(_getOtpErrorMsg(e.code));
     } catch (e) {
+      logger.e(e.toString());
+
       onError(_getOtpErrorMsg(e.toString()));
     }
   }

@@ -16,6 +16,7 @@ import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/logger.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
 import 'package:async/async.dart';
 
@@ -46,7 +47,6 @@ class StatusRepository {
     required String userPhoneNumber,
   }) async {
     try {
-      
       await _db.statuses.doc(statusId).update({
         'seenBy': FieldValue.arrayUnion([userPhoneNumber]),
       });
@@ -84,11 +84,12 @@ class StatusRepository {
       final statusId = const Uuid().v4();
 
       final List<String> whitelist = [];
-
       for (Contact entry in contacts) {
-        final userModel = await _db.users
-            .where(kPhoneNumberField, isEqualTo: entry.phones[0].normalizedNumber)
-            .get();
+        // had to do it this way due to ios returning empty normalized number
+        final phone = removePhoneDecoration((entry.phones[0].normalizedNumber.isEmpty
+            ? entry.phones[0].number
+            : entry.phones[0].normalizedNumber));
+        final userModel = await _db.users.where(kPhoneNumberField, isEqualTo: phone).get();
         if (userModel.docs.isNotEmpty) {
           final UserModel model = userModel.docs[0].data();
           whitelist.add(model.uid);
@@ -105,26 +106,26 @@ class StatusRepository {
             },
             'lastStatus': StatusType.text.name.toString(),
           });
-        } else {
-          // We don't have an existing status
-          final status = StatusModel(
-            uid: activeUser,
-            username: username,
-            phoneNumber: phoneNumber,
-            photoUrl: [],
-            createdAt: DateTime.now(),
-            profileImage: profileImage,
-            statusId: statusId,
-            texts: {
-              text.text: text.bgColor.value,
-            },
-            whitelist: whitelist,
-            lastStatus: StatusType.text,
-            seenBy: const [],
-          );
-          return _db.statuses.doc(statusId).set(status);
+          return;
         }
       }
+      // We don't have an existing status
+      final status = StatusModel(
+        uid: activeUser,
+        username: username,
+        phoneNumber: phoneNumber,
+        photoUrl: [],
+        createdAt: DateTime.now(),
+        profileImage: profileImage,
+        statusId: statusId,
+        texts: {
+          text.text: text.bgColor.value,
+        },
+        whitelist: whitelist,
+        lastStatus: StatusType.text,
+        seenBy: const [],
+      );
+      return _db.statuses.doc(statusId).set(status);
     } catch (e, stack) {
       _logger.e(e);
       _logger.e(stack);
@@ -152,7 +153,9 @@ class StatusRepository {
       final List<String> whitelist = [];
       for (Contact entry in contacts) {
         // Check if the contact is registered on the app
-        final phone = entry.phones[0].normalizedNumber;
+        final phone = removePhoneDecoration((entry.phones[0].normalizedNumber.isEmpty
+            ? entry.phones[0].number
+            : entry.phones[0].normalizedNumber));
         final userModel = await _db.users.where(kPhoneNumberField, isEqualTo: phone).get();
         if (userModel.docs.isNotEmpty) {
           final UserModel model = userModel.docs[0].data();
@@ -168,24 +171,25 @@ class StatusRepository {
             'photoUrl': [...status.photoUrl, url],
             'lastStatus': StatusType.image.name.toString(),
           });
-        } else {
-          final status = StatusModel(
-            uid: activeUser,
-            username: username,
-            phoneNumber: phoneNumber,
-            photoUrl: [url],
-            createdAt: DateTime.now(),
-            profileImage: profileImage,
-            statusId: statusId,
-            texts: {},
-            whitelist: whitelist,
-            lastStatus: StatusType.image,
-            seenBy: const [],
-          );
-
-          await _db.statuses.doc(statusId).set(status);
+          return;
         }
       }
+
+      final status = StatusModel(
+        uid: activeUser,
+        username: username,
+        phoneNumber: phoneNumber,
+        photoUrl: [url],
+        createdAt: DateTime.now(),
+        profileImage: profileImage,
+        statusId: statusId,
+        texts: {},
+        whitelist: whitelist,
+        lastStatus: StatusType.image,
+        seenBy: const [],
+      );
+
+      await _db.statuses.doc(statusId).set(status);
     } catch (e) {
       _logger.e(e);
       onError();
