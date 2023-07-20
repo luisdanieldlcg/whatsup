@@ -20,8 +20,16 @@ final chatsStreamProvider = StreamProvider((ref) {
   return ref.watch(chatRepositoryProvider).chats;
 });
 
+final groupsStreamProvider = StreamProvider((ref) {
+  return ref.watch(chatRepositoryProvider).userGroups;
+});
+
 final messagesStreamProvider = StreamProvider.family((ref, String chatId) {
   return ref.watch(chatRepositoryProvider).getChatMessages(chatId);
+});
+
+final groupMessagesStreamProvider = StreamProvider.family((ref, String groupId) {
+  return ref.watch(chatRepositoryProvider).getGroupMessages(groupId);
 });
 
 class ChatController {
@@ -47,6 +55,7 @@ class ChatController {
     required BuildContext context,
     required String text,
     required String receiverId,
+    required bool isGroup,
   }) {
     ref.read(userFetchProvider).whenData((value) {
       if (value.isSome()) {
@@ -55,6 +64,7 @@ class ChatController {
           receiverId: receiverId,
           message: text,
           reply: ref.read(messageReplyProvider),
+          isGroup: isGroup,
         );
         ref.read(messageReplyProvider.notifier).update((state) => const None());
       }
@@ -66,17 +76,18 @@ class ChatController {
     required String receiverId,
     required File file,
     required ChatMessageType type,
+    required bool isGroup,
   }) {
     ref.read(userFetchProvider).whenData((value) {
       if (value.isSome()) {
         chatRepository.sendFileMessage(
-          file: file,
-          receiverId: receiverId,
-          sender: value.unwrap(),
-          ref: ref,
-          type: type,
-          reply: ref.read(messageReplyProvider),
-        );
+            file: file,
+            receiverId: receiverId,
+            sender: value.unwrap(),
+            ref: ref,
+            type: type,
+            reply: ref.read(messageReplyProvider),
+            isGroup: isGroup);
         ref.read(messageReplyProvider.notifier).update((state) => const None());
       }
     });

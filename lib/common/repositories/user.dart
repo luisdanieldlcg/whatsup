@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:whatsup/common/models/call.dart';
 import 'package:whatsup/common/models/chat.dart';
+import 'package:whatsup/common/models/group.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/models/status.dart';
 import 'package:whatsup/common/models/user.dart';
@@ -26,6 +28,15 @@ final userRepositoryProvider = Provider((ref) {
 
 final userFetchProvider = FutureProvider((ref) {
   return ref.watch(userRepositoryProvider).getUser();
+});
+
+final userFetchByIdProvider = FutureProvider.family<Option<UserModel>, String>((ref, id) {
+  return ref.watch(userRepositoryProvider).getUserById(id);
+});
+
+final userFetchByPhoneNumberProvider =
+    FutureProvider.family<Option<UserModel>, String>((ref, phoneNumber) {
+  return ref.watch(userRepositoryProvider).getUserByPhoneNumber(phoneNumber);
 });
 
 final userStream = StreamProvider.family<UserModel, String>((ref, id) {
@@ -61,6 +72,24 @@ class UserRepository {
       return const Option.none();
     }
     return Option.of(json.data()!);
+  }
+
+  Future<Option<UserModel>> getUserById(String uid) async {
+    final json = await users.doc(uid).get();
+    if (json.data() == null) {
+      logger.d("The user with id $uid does not exists in the database");
+      return const Option.none();
+    }
+    return Option.of(json.data()!);
+  }
+
+  Future<Option<UserModel>> getUserByPhoneNumber(String normalizedPhoneNumber) async {
+    final json = await users.where(kPhoneNumberField, isEqualTo: normalizedPhoneNumber).get();
+    if (json.docs.isEmpty) {
+      logger.d("The user with phone number $normalizedPhoneNumber does not exists in the database");
+      return const Option.none();
+    }
+    return Option.of(json.docs[0].data());
   }
 
   Future<void> create({
@@ -138,9 +167,23 @@ class UserRepository {
   }
 
   CollectionReference<StatusModel> get statuses {
-    return _db.collection(kStatusSubCollectionId).withConverter<StatusModel>(
+    return _db.collection(kStatusCollectionId).withConverter<StatusModel>(
           fromFirestore: (snapshot, _) => StatusModel.fromMap(snapshot.data()!),
           toFirestore: (status, _) => status.toMap(),
+        );
+  }
+
+  CollectionReference<GroupModel> get groups {
+    return _db.collection(kGroupsCollectionId).withConverter<GroupModel>(
+          fromFirestore: (snapshot, _) => GroupModel.fromMap(snapshot.data()!),
+          toFirestore: (group, _) => group.toMap(),
+        );
+  }
+
+  CollectionReference<CallModel> get calls {
+    return _db.collection(kCallsCollection).withConverter<CallModel>(
+          fromFirestore: (snapshot, _) => CallModel.fromMap(snapshot.data()!),
+          toFirestore: (group, _) => group.toMap(),
         );
   }
 

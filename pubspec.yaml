@@ -48,10 +48,14 @@ dependencies:
   emoji_picker_flutter: ^1.6.1
   flutter_sound: ^9.2.13
   path_provider: ^2.0.15
-  permission_handler: ^9.2.0
+  permission_handler: ^10.2.0
   audioplayers: ^1.0.1
   swipe_to: ^1.0.2
   story_view: ^0.15.0
+  flutter_dotenv: ^5.1.0
+  zego_uikit_prebuilt_call: ^3.10.4
+  zego_uikit_signaling_plugin: ^2.2.0
+  # agora_uikit: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +80,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/img/bg.png
     - assets/img/welcome_bg.png
 

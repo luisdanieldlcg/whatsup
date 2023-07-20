@@ -5,7 +5,7 @@ class ChatModel {
   final String receiverId;
   final DateTime lastMessageTime;
   final String lastMessage;
-  ChatModel({
+  const ChatModel({
     required this.name,
     required this.profileImage,
     required this.receiverId,

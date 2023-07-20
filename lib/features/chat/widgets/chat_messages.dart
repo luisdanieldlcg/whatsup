@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+
 import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
@@ -15,10 +17,12 @@ import 'package:whatsup/features/chat/widgets/message_card.dart';
 class ChatMessages extends ConsumerStatefulWidget {
   final String receiverId;
   final String receiverName;
+  final bool isGroup;
   const ChatMessages({
     super.key,
     required this.receiverId,
     required this.receiverName,
+    required this.isGroup,
   });
 
   @override
@@ -52,8 +56,11 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
 
   @override
   Widget build(BuildContext context) {
-    final liveMessages = ref.watch(messagesStreamProvider(widget.receiverId));
-    return liveMessages.when(
+    final liveStream = widget.isGroup
+        ? ref.watch(groupMessagesStreamProvider(widget.receiverId))
+        : ref.watch(messagesStreamProvider(widget.receiverId));
+
+    return liveStream.when(
       data: (messages) {
         if (messages.isEmpty) {
           return const Center(
@@ -74,7 +81,7 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
           itemBuilder: (context, index) {
             final message = messages[index];
             tryMarkMessageAsSeen(message);
-    
+
             final isMyMessage =
                 message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
             return MessageCard(

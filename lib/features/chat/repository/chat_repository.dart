@@ -6,12 +6,14 @@ import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/chat.dart';
+import 'package:whatsup/common/models/group.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/repositories/auth.dart';
 import 'package:whatsup/common/repositories/storage.dart';
 import 'package:whatsup/common/repositories/user.dart';
+import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/logger.dart';
 
@@ -57,16 +59,18 @@ class ChatRepository {
   Future<void> saveMessage({
     required String id,
     required UserModel sender,
-    required UserModel receiver,
+    required Option<UserModel> receiver,
+    required String receiverId,
     required String text,
     required DateTime time,
     required ChatMessageType type,
     required Option<MessageReply> reply,
+    required bool isGroup,
   }) async {
     final newMsg = MessageModel(
       uid: id,
       senderId: sender.uid,
-      recvId: receiver.uid,
+      recvId: receiverId,
       message: text,
       type: type,
       timeSent: time,
@@ -76,44 +80,61 @@ class ChatRepository {
           ? ''
           : reply.unwrap().isSenderMessage
               ? sender.name
-              : receiver.name,
+              : receiver.isNone()
+                  ? ''
+                  : receiver.unwrap().name,
       repliedMessageType: reply.isNone() ? ChatMessageType.text : reply.unwrap().type,
     );
-
-    await _db.chatMessages(userId: sender.uid, chatId: receiver.uid).doc(id).set(newMsg);
-    await _db.chatMessages(userId: receiver.uid, chatId: sender.uid).doc(id).set(newMsg);
+    if (isGroup) {
+      await _db.groups
+          .doc(receiverId)
+          .collection(kChatsSubCollectionId)
+          .doc(id)
+          .set(newMsg.toMap());
+    } else {
+      await _db.chatMessages(userId: sender.uid, chatId: receiverId).doc(id).set(newMsg);
+      await _db.chatMessages(userId: receiverId, chatId: sender.uid).doc(id).set(newMsg);
+    }
   }
 
   Future<void> updateChat({
     required UserModel sender,
-    required UserModel receiver,
-    required String messageReceiverId,
+    required Option<UserModel> receiver,
+    required String receiverId,
     required DateTime messageTime,
     required String message,
+    required bool isGroup,
   }) async {
     // First we update the chat of the receiver
     final activeUser = _auth.currentUser;
     final userId = activeUser.unwrap().uid; // assuming that the user is logged in
 
-    final receiverChat = ChatModel(
-      name: sender.name,
-      profileImage: sender.profileImage,
-      receiverId: sender.uid,
-      lastMessageTime: messageTime,
-      lastMessage: message,
-    );
+    if (isGroup) {
+      _db.groups.doc(receiverId).update({
+        'lastMessageTime': messageTime.microsecondsSinceEpoch,
+        'lastMessage': message,
+      });
+    } else {
+      final receiverChat = ChatModel(
+        name: sender.name,
+        profileImage: sender.profileImage,
+        receiverId: sender.uid,
+        lastMessageTime: messageTime,
+        lastMessage: message,
+      );
+      final receiverData = receiver.unwrap();
+      await _db.userChats(receiverId).doc(userId).set(receiverChat);
 
-    await _db.userChats(messageReceiverId).doc(userId).set(receiverChat);
-
-    // Then we update the chat of the sender
-    final senderChat = ChatModel(
-      name: receiver.name,
-      profileImage: receiver.profileImage,
-      receiverId: receiver.uid,
-      lastMessageTime: messageTime,
-      lastMessage: message,
-    );
-    await _db.userChats(userId).doc(messageReceiverId).set(senderChat);
+      // Then we update the chat of the sender
+      final senderChat = ChatModel(
+        name: receiverData.name,
+        profileImage: receiverData.profileImage,
+        receiverId: receiverData.uid,
+        lastMessageTime: messageTime,
+        lastMessage: message,
+      );
+      await _db.userChats(userId).doc(receiverId).set(senderChat);
+    }
   }
 
   Future<void> sendFileMessage({
@@ -123,6 +144,7 @@ class ChatRepository {
     required Ref ref,
     required ChatMessageType type,
     required Option<MessageReply> reply,
+    required bool isGroup,
   }) async {
     try {
       final time = DateTime.now();
@@ -132,11 +154,15 @@ class ChatRepository {
         path: 'chat/${type.type}/${sender.uid}/$receiverId',
         file: file,
       );
-      final recvQuery = await _db.users.doc(receiverId).get();
-      final receiver = recvQuery.data();
-      if (receiver == null) {
-        _logger.e("Receiver not found. Chat could not be updated.");
-        return;
+      Option<UserModel> recvUser = none();
+      if (!isGroup) {
+        final recvQuery = await _db.users.doc(receiverId).get();
+        final receiver = recvQuery.data();
+        if (receiver == null) {
+          _logger.e("Receiver not found. Chat could not be updated.");
+          return;
+        }
+        recvUser = some(receiver);
       }
 
       String message;
@@ -158,21 +184,23 @@ class ChatRepository {
       }
 
       updateChat(
-        sender: sender,
-        receiver: receiver,
-        messageReceiverId: receiverId,
-        messageTime: time,
-        message: message,
-      );
+          sender: sender,
+          receiver: recvUser,
+          receiverId: receiverId,
+          messageTime: time,
+          message: message,
+          isGroup: isGroup);
 
       saveMessage(
         id: messageId,
         sender: sender,
-        receiver: receiver,
+        receiver: recvUser,
+        receiverId: receiverId,
         text: url,
         time: time,
         type: type,
         reply: reply,
+        isGroup: isGroup,
       );
     } catch (e) {
       _logger.e(e.toString());
@@ -184,36 +212,59 @@ class ChatRepository {
     required String receiverId,
     required String message,
     required Option<MessageReply> reply,
+    required bool isGroup,
   }) async {
     try {
       _logger.d("Sending message to $receiverId");
       final time = DateTime.now();
       final messageId = const Uuid().v4();
-      final receiverQuery = await _db.users.doc(receiverId).get();
-      final receiver = receiverQuery.data();
-      if (receiver == null) {
-        _logger.e("Receiver not found. Chat could not be updated.");
-        return;
+      // empty when sending to a group
+      Option<UserModel> receiver = none();
+      if (!isGroup) {
+        final receiverQuery = await _db.users.doc(receiverId).get();
+        final recv = receiverQuery.data();
+        if (recv == null) {
+          _logger.e("Receiver not found. Chat could not be updated.");
+          return;
+        }
+        receiver = some(recv);
       }
+
       updateChat(
         sender: sender,
         receiver: receiver,
-        messageReceiverId: receiver.uid,
+        receiverId: receiverId,
         messageTime: time,
         message: message,
+        isGroup: isGroup,
       );
       saveMessage(
-        id: messageId,
-        sender: sender,
-        receiver: receiver,
-        text: message,
-        time: time,
-        type: ChatMessageType.text,
-        reply: reply,
-      );
+          id: messageId,
+          sender: sender,
+          receiver: receiver,
+          receiverId: receiverId,
+          text: message,
+          time: time,
+          type: ChatMessageType.text,
+          reply: reply,
+          isGroup: isGroup);
     } catch (e) {
       _logger.e(e.toString());
     }
+  }
+
+  Stream<List<GroupModel>> get userGroups {
+    return _auth.currentUser.match(
+      () => const Stream.empty(),
+      (userModel) {
+        return _db.groups.snapshots().map((event) {
+          return event.docs
+              .map((e) => e.data())
+              .filter((group) => group.members.contains(userModel.uid))
+              .toList();
+        });
+      },
+    );
   }
 
   Stream<List<ChatModel>> get chats {
@@ -227,6 +278,17 @@ class ChatRepository {
         });
       },
     );
+  }
+
+  Stream<List<MessageModel>> getGroupMessages(String groupId) {
+    return _db.groups
+        .doc(groupId)
+        .collection(kChatsSubCollectionId)
+        .orderBy('timeSent')
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) => MessageModel.fromMap(e.data())).toList();
+    });
   }
 
   Stream<List<MessageModel>> getChatMessages(String chatId) {

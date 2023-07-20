@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:whatsup/common/models/call.dart';
 import 'package:whatsup/common/models/status.dart';
-import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/auth/pages/create_profile.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
 import 'package:whatsup/features/auth/pages/otp_verification.dart';
+import 'package:whatsup/features/call/pages/call.dart';
 import 'package:whatsup/features/chat/pages/chat_page.dart';
 import 'package:whatsup/features/contact/pages/select_contact.dart';
+import 'package:whatsup/features/group/pages/create_group.dart';
 import 'package:whatsup/features/home/pages/home.dart';
 import 'package:whatsup/features/status/pages/status_image_preview.dart';
 import 'package:whatsup/features/status/pages/status_view.dart';
@@ -26,6 +28,8 @@ class PageRouter {
   static const String statusWriter = "/status-writer";
   static const String statusViewer = "/status-viewer";
   static const String statusImageConfirm = "/status-image-confirm";
+  static const String createGroup = "/create-group";
+  static const String call = "/call";
 
   static Route<Widget> generateRoutes(RouteSettings settings) {
     AppLogger.getLogger((PageRouter).toString()).d('Navigating to ${settings.name}');
@@ -44,8 +48,13 @@ class PageRouter {
       case selectContact:
         return _createRoute(const SelectContactPage());
       case chat:
-        final UserModel other = settings.arguments as UserModel;
-        return _createRoute(ChatPage(otherUser: other));
+        final args = settings.arguments as Map<String, dynamic>;
+        return _createRoute(ChatPage(
+          streamId: args['streamId'] as String,
+          avatarImage: args['avatarImage'] as String,
+          isGroup: args['isGroup'] as bool,
+          name: args['name'] as String,
+        ));
       case statusWriter:
         return _createRoute(const StatusWriterPage());
       case statusViewer:
@@ -54,6 +63,17 @@ class PageRouter {
       case statusImageConfirm:
         final file = settings.arguments as File;
         return _createRoute(StatusImageConfirmPage(file: file));
+      case createGroup:
+        return _createRoute(const CreateGroupPage());
+      case call:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _createRoute(
+          CallPage(
+            channelId: args['channelId'] as String,
+            model: args['model'] as CallModel,
+            isGroup: args['isGroup'] as bool,
+          ),
+        );
       default:
         return _createRoute(UnknownRoutePage(targetRoute: settings.name!));
     }

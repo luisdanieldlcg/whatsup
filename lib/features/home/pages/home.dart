@@ -4,6 +4,8 @@ import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/misc.dart';
+import 'package:whatsup/features/call/service/call_invitation.dart';
+import 'package:whatsup/features/call/widgets/call_list.dart';
 import 'package:whatsup/features/home/widgets/chat_list.dart';
 import 'package:whatsup/features/status/widgets/status_list.dart';
 import 'package:whatsup/router.dart';
@@ -17,12 +19,12 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMixin {
   late final TabController controller;
+  static final kAppBarActionIconColor = Colors.grey.shade100;
 
   @override
   void initState() {
     super.initState();
     controller = TabController(length: 3, vsync: this);
-
     // update the state of the tab controller when the tab changes
     controller.addListener(() {
       if (controller.indexIsChanging) {
@@ -59,24 +61,52 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                 ref.read(themeNotifierProvider.notifier).toggle();
               },
               icon: themeMode == Brightness.light
-                  ? const Icon(Icons.nightlight_round)
-                  : const Icon(Icons.wb_sunny),
+                  ? Icon(
+                      Icons.nightlight_outlined,
+                      color: kAppBarActionIconColor,
+                    )
+                  : Icon(
+                      Icons.wb_sunny_outlined,
+                      color: kAppBarActionIconColor,
+                    ),
             ),
 
             IconButton(
               splashRadius: kDefaultSplashRadius,
               onPressed: () {},
-              icon: const Icon(Icons.photo_camera_outlined),
+              icon: Icon(
+                Icons.photo_camera_outlined,
+                color: kAppBarActionIconColor,
+              ),
             ),
             IconButton(
               splashRadius: kDefaultSplashRadius,
               onPressed: () {},
-              icon: const Icon(Icons.search),
+              color: kAppBarActionIconColor,
+              icon: Icon(
+                Icons.search,
+                color: kAppBarActionIconColor,
+              ),
             ),
-            IconButton(
+            PopupMenuButton(
               splashRadius: kDefaultSplashRadius,
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
+              icon: Icon(
+                Icons.more_vert,
+                color: kAppBarActionIconColor,
+              ),
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    child: const Text(
+                      "New Group",
+                    ),
+                    onTap: () {
+                      // wait for the menu to close before navigating
+                      Future(() => Navigator.pushNamed(context, PageRouter.createGroup));
+                    },
+                  ),
+                ];
+              },
             ),
           ],
         ),
@@ -85,7 +115,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
           children: const [
             ChatList(),
             StatusList(),
-            Center(child: Text("Calls")),
+            CallList(),
           ],
         ),
         floatingActionButton: floatingWidgets,

@@ -18,10 +18,12 @@ import 'package:whatsup/features/chat/widgets/reply_container.dart';
 class ChatTextField extends ConsumerStatefulWidget {
   final String receiverId;
   final String receiverName;
+  final bool isGroup;
   const ChatTextField({
     super.key,
     required this.receiverId,
     required this.receiverName,
+    required this.isGroup,
   });
 
   @override
@@ -186,6 +188,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
           receiverId: widget.receiverId,
           file: file,
           type: type,
+          isGroup: widget.isGroup,
         );
   }
 
@@ -224,6 +227,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
             context: context,
             text: messageController.text,
             receiverId: widget.receiverId,
+            isGroup: widget.isGroup
           );
     }
 
