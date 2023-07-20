@@ -1,33 +1,49 @@
-# Flutter Template
+# WhatsUp
 
-This is a minimal flutter template for developing larger and scalable apps.
+WhatsUp is a WhatsApp clone built with Flutter and Firebase. It aims to replicate some of its core features
+but its main purpose is to showcase how easy it is to build real-time applications with Flutter and Firebase.
 
 ## Features
 
-- Riverpod state management solution
-- Logging setup
-- Riverpod update observable
-- Light / dark theme toggle
-- Functional features with fpdart
-- Auth feature skeleton
-- Routing skeleton with error page.
+- Phone Authentication 📲: Users can register their phone number and receive an OTP (One-Time Password) for verification.
+- Light / Dark Theme 🌞🌚: You can switch between light and dark theme after you registered.
+- Contacts Display 📒: Users can see their contacts who are already using the app.
+- Real-time messaging 💬 ⚡: Clients can communicate each other in real time.
+- Chat features 💬📷🎙️: Clients can send and receive text , images, videos and voice messages.
+- Online / Offline Status 🟢🔴: Clients can see other users online or offline status.
+- Read / Unread Messages ☑️👀: Clients can see if other users have read their messages.
+- Message Replies ↩️: You can reply to specific messages in a conversation, facilitating threaded discussions.
+- Emoji Support 😉: Users can send emojis in their messages using a built-in emoji picker.
+- Group Chat 👥: Users can create groups and select the members.
+- Status / Stories 📷🪩: Users can post status updates and view the status of other users.
+- Video calls 📹🤳: Users can make video calls to their contacts.
+- Call History 📞: Users can see their call history, who they called and who called them.
+- Real-time updates ⚡: All of the above features are updated in real-time as they happen, and synced across devices.
 
-## Dependencies
+## Screenshots
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
-  logger: ^1.4.0
-  flutter_riverpod: ^2.3.6
-  fpdart: ^0.6.0
-```
+Here are some screenshots of the app.
 
-## Getting Started
+|                Splash Screen                 |                Phone Authentication                 |                 OTP Verification                  |
+| :------------------------------------------: | :-------------------------------------------------: | :-----------------------------------------------: |
+| ![Welcome Screen](assets/readme/welcome.png) | ![Phone Authentication](assets/readme/send_sms.png) | ![OTP Verification](assets/readme/verify_sms.png) |
 
-This template was tested with Flutter 3.10 but it should work with slightly older versions above 3.0.
+|                   Create Profile                    |               Chats               |              Chats Light Theme               |
+| :-------------------------------------------------: | :-------------------------------: | :------------------------------------------: |
+| ![Create Profile](assets/readme/create_profile.png) | ![Chats](assets/readme/chats.png) | ![Chats Dark](assets/readme/chats_light.png) |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+|              Chat               |                 Chat Reply                  |              Chat Light Theme               |
+| :-----------------------------: | :-----------------------------------------: | :-----------------------------------------: |
+| ![Chat](assets/readme/chat.png) | ![Chat Reply](assets/readme/chat_reply.png) | ![Chat Light](assets/readme/chat_light.png) |
+
+|                  Create Group                   |                     Create Group Light                      |                  Status Page                   |
+| :---------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------: |
+| ![Create Group](assets/readme/create_group.png) | ![Create Group Light](assets/readme/create_group_light.png) | ![Status Page](assets/readme/status_empty.png) |
+
+|                   Status Writer                   |                   Status Viewer                   |                        Status Updates                        |
+| :-----------------------------------------------: | :-----------------------------------------------: | :----------------------------------------------------------: |
+| ![Status Writer](assets/readme/status_writer.png) | ![Status Viewer](assets/readme/status_viewer.png) | ![Recent Calls Light Mode](assets/readme/status_updates.png) |
+
+|                  Recent Calls                   |                     Recent Calls Light                      |                   Receiving Calls                    |
+| :---------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------: |
+| ![Recent Calls](assets/readme/recent_calls.png) | ![Recent Calls Light](assets/readme/recent_calls_light.png) | ![Receiving Calls](assets/readme/receiving_call.png) |
