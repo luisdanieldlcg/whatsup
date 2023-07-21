@@ -32,8 +32,7 @@ class _CallListState extends ConsumerState<CallList> {
             ],
           );
         }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return ListView(
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
