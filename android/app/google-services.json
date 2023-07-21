@@ -29,6 +29,13 @@
             {
               "client_id": "743457869400-ngp4p288k5dddl6ftqt2qb58gvl48631.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "743457869400-149i42elp8c6srup5r2k70g4j4436fhu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.whatsup.whatsUp.RunnerTests"
+              }
             }
           ]
         }

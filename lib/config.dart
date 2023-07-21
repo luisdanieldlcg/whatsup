@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
+import 'package:whatsup/common/util/logger.dart';
 
 class AppConfig {
-
+  static final Logger _logger = AppLogger.getLogger('AppConfig');
   static final int zegoCloudAppId = int.parse(dotenv.get("ZEGOCLOUD_APP_ID"));
   static final String zeroCloudAppSign = dotenv.get("ZEGOCLOUD_APP_SIGN");
 
@@ -23,8 +25,9 @@ class AppConfig {
     iosClientId: dotenv.get("FIREBASE_IOS_CLIENT_ID"),
     iosBundleId: dotenv.get("FIREBASE_IOS_BUNDLE_ID"),
   );
-  
+
   static FirebaseOptions get firebaseSettings {
+    _logger.d("Running on ${defaultTargetPlatform.toString()} platform");
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return _androidSettings;

@@ -24,6 +24,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
+    name: dotenv.get("FIREBASE_PROJECT_ID"),
     options: AppConfig.firebaseSettings,
   );
   runApp(
