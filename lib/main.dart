@@ -6,7 +6,6 @@ import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/config.dart';
 import 'package:whatsup/features/call/service/call_invitation.dart';
-import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -25,8 +24,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-    // options: AppConfig.firebaseSettings,
+    // options: DefaultFirebaseOptions.currentPlatform,
+    options: AppConfig.firebaseSettings,
   );
   runApp(
     ProviderScope(
