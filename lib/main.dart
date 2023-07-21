@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
+import 'package:whatsup/config.dart';
 import 'package:whatsup/features/call/service/call_invitation.dart';
 import 'package:whatsup/firebase_options.dart';
 import 'package:whatsup/router.dart';
@@ -25,6 +26,7 @@ void main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+    // options: AppConfig.firebaseSettings,
   );
   runApp(
     ProviderScope(
