@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/models/call.dart';
 import 'package:whatsup/common/repositories/auth.dart';
 import 'package:whatsup/common/util/ext.dart';
-import 'package:whatsup/config.dart';
+import 'package:whatsup/features/config.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class CallPage extends ConsumerStatefulWidget {

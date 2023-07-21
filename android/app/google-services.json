@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "250181170606",
-    "project_id": "whatsup-37980",
-    "storage_bucket": "whatsup-37980.appspot.com"
+    "project_number": "743457869400",
+    "project_id": "whatsapp-clone-eb023",
+    "storage_bucket": "whatsapp-clone-eb023.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250181170606:android:e33f69a98563ee6f1a043f",
+        "mobilesdk_app_id": "1:743457869400:android:30c82c0099558b4102842d",
         "android_client_info": {
           "package_name": "com.whatsup.whatsup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250181170606-4o80vkle2buch8dqluodcqh2hk0nlsmr.apps.googleusercontent.com",
+          "client_id": "743457869400-ngp4p288k5dddl6ftqt2qb58gvl48631.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKGUgB6MBuJb39Fohe35yb1Pw9ithcIAo"
+          "current_key": "AIzaSyA6ijy4zNmFIvzf96yVDB5kEfLxdGByEo8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "250181170606-4o80vkle2buch8dqluodcqh2hk0nlsmr.apps.googleusercontent.com",
+              "client_id": "743457869400-ngp4p288k5dddl6ftqt2qb58gvl48631.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "250181170606-58u9dvliagq9k05al362fmr8dr21vof4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.flutterFirebaseTemplate"
-              }
             }
           ]
         }
