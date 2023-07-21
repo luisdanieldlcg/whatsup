@@ -15,13 +15,14 @@ class ChatList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final liveChats = ref.watch(chatsStreamProvider);
     final liveGroups = ref.watch(groupsStreamProvider);
-    return Column(
+    return ListView(
       children: [
         liveChats.when(
           data: (chats) {
             if (chats.isEmpty) {
               return const Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 180),
                     Icon(Icons.chat_bubble_outline_rounded, size: 84),
@@ -62,13 +63,19 @@ class ChatList extends ConsumerWidget {
                     );
                   },
                   error: (err, trace) => UnhandledError(error: err.toString()),
-                  loading: () => const WorkProgressIndicator(),
+                  loading: () => SizedBox(),
                 );
               },
             );
           },
           error: (err, trace) => UnhandledError(error: err.toString()),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () {
+            final size = MediaQuery.of(context).size;
+            return Padding(
+              padding: EdgeInsets.only(top: size.height * 0.3),
+              child: const WorkProgressIndicator(),
+            );
+          },
         ),
         liveGroups.when(
           data: (groups) {
@@ -102,7 +109,7 @@ class ChatList extends ConsumerWidget {
     );
   }
 
-  void onChatTap({  
+  void onChatTap({
     required String receiver,
     required String name,
     required String image,

@@ -69,7 +69,7 @@ class _StartUpState extends ConsumerState<StartUp> with WidgetsBindingObserver {
           },
           loading: () => const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: SizedBox(),
             ),
           ),
         );
