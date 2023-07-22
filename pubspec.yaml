@@ -82,6 +82,8 @@ flutter:
     - .env
     - assets/img/bg.png
     - assets/img/welcome_bg.png
+    - assets/img/chat_room_bg_dark.png
+    - assets/img/chat_room_bg_light.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

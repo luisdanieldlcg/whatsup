@@ -8,7 +8,7 @@ import 'package:whatsup/features/auth/pages/create_profile.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
 import 'package:whatsup/features/auth/pages/otp_verification.dart';
 import 'package:whatsup/features/call/pages/call.dart';
-import 'package:whatsup/features/chat/pages/chat_page.dart';
+import 'package:whatsup/features/chat/pages/chat_room.dart';
 import 'package:whatsup/features/contact/pages/select_contact.dart';
 import 'package:whatsup/features/group/pages/create_group.dart';
 import 'package:whatsup/features/home/pages/home.dart';
@@ -49,7 +49,7 @@ class PageRouter {
         return _createRoute(const SelectContactPage());
       case chat:
         final args = settings.arguments as Map<String, dynamic>;
-        return _createRoute(ChatPage(
+        return _createRoute(ChatRoomPage(
           streamId: args['streamId'] as String,
           avatarImage: args['avatarImage'] as String,
           isGroup: args['isGroup'] as bool,

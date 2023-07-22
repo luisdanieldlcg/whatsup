@@ -14,3 +14,5 @@ const String kPhoneNumberField = "phoneNumber";
 const String kIsOnlineField = "isOnline";
 const String kCallsCollection = "calls";
 const double kDefaultSplashRadius = 18.0;
+const kChatRoomBackgroundDarkPath = "assets/img/chat_room_bg_dark.png";
+const kChatRoomBackgroundLightPath = "assets/img/chat_room_bg_light.jpg";
