@@ -55,15 +55,6 @@ dependencies:
   flutter_dotenv: ^5.1.0
   zego_uikit_prebuilt_call: ^3.10.4
   zego_uikit_signaling_plugin: ^2.2.0
-  flutter_native_splash: ^2.3.1
-
-flutter_native_splash:
-  color: "#42a5f5"
-  background_image: assets/img/bg.png
-android_12:
-  color: "#42a5f5"
-  image_dark: assets/img/bg.png
-
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/logger.dart';
@@ -22,15 +21,11 @@ void main() async {
   final navigatorKey = GlobalKey<NavigatorState>();
   CallInvitationService.attachNavigatorKey(navigatorKey);
   CallInvitationService.useSysCallUI();
-  final bindings = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: bindings);
-
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     name: dotenv.get("FIREBASE_PROJECT_ID"),
     options: AppConfig.firebaseSettings,
   );
-  await Future.delayed(const Duration(seconds: 1));
-  FlutterNativeSplash.remove();
 
   runApp(
     ProviderScope(

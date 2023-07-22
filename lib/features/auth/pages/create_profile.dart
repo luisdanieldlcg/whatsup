@@ -81,7 +81,6 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
             Navigator.pushNamedAndRemoveUntil(context, PageRouter.home, (route) => false),
           },
         );
-    await Future.delayed(const Duration(milliseconds: 300));
     if (mounted) {
       setState(() {
         loading = false;

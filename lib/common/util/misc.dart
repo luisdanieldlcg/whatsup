@@ -1,8 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/features/auth/controllers/auth.dart';
+
+// Should only be used in places where we can assume
+// that the user is logged in.
+String getUserId(WidgetRef ref) {
+  return ref.read(authControllerProvider).currentUser.unwrap().uid;
+}
 
 void showSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
