@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/group/controller/group_controller.dart';
 import 'package:whatsup/features/group/widgets/select_group_contacts.dart';
@@ -23,7 +24,7 @@ class _CreateGroupPageState extends ConsumerState<CreateGroupPage> {
   bool sending = false;
 
   void pickImage() async {
-    groupImage = await pickGalleryImage(context);
+    groupImage = await FilePicker.pickFile(FilePickerSource.galleryImage);
     setState(() {});
   }
 

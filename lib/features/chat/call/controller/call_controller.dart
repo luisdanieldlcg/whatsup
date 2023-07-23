@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:whatsup/common/models/call.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/ext.dart';
-import 'package:whatsup/features/call/repository/call_repository.dart';
+import 'package:whatsup/features/chat/call/repository/call_repository.dart';
 import 'package:whatsup/router.dart';
 
 final callControllerProvider = Provider<CallController>((ref) {

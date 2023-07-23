@@ -57,6 +57,8 @@ dependencies:
   bubble: ^1.2.1
   video_player: ^2.7.0
   chewie: ^1.5.0
+  shimmer: ^3.0.0
+  audio_waveforms: ^1.0.4
 
 dev_dependencies:
   flutter_test:

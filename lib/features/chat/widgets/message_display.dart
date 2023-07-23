@@ -18,7 +18,10 @@ class MessageDisplay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     switch (type) {
       case ChatMessageType.image:
-        return CachedNetworkImage(imageUrl: message);
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(imageUrl: message),
+        );
       case ChatMessageType.video:
         return ChatVideoPlayer(url: message);
       case ChatMessageType.audio:

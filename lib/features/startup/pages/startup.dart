@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/logger.dart';
-import 'package:whatsup/features/call/service/call_invitation.dart';
+import 'package:whatsup/features/chat/call/service/call_invitation.dart';
 import 'package:whatsup/features/home/pages/home.dart';
 import 'package:whatsup/features/startup/controller/startup_controller.dart';
 import 'package:whatsup/features/welcome/pages/welcome.dart';

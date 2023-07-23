@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/repositories/user.dart';
+import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/router.dart';
 
@@ -26,7 +27,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
   }
 
   void pickProfilePic() async {
-    profilePic = await pickGalleryImage(context);
+    profilePic = await FilePicker.pickFile(FilePickerSource.galleryImage);
     setState(() {});
   }
 

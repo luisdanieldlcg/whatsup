@@ -7,8 +7,8 @@ import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
-import 'package:whatsup/features/call/controller/call_controller.dart';
-import 'package:whatsup/features/call/widgets/call_invitation_button.dart';
+import 'package:whatsup/features/chat/call/controller/call_controller.dart';
+import 'package:whatsup/features/chat/call/widgets/call_invitation_button.dart';
 
 class ChatRoomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool isGroupRoom;

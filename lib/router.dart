@@ -7,7 +7,7 @@ import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/auth/pages/create_profile.dart';
 import 'package:whatsup/features/auth/pages/login.dart';
 import 'package:whatsup/features/auth/pages/otp_verification.dart';
-import 'package:whatsup/features/call/pages/call.dart';
+import 'package:whatsup/features/chat/call/pages/call.dart';
 import 'package:whatsup/features/chat/pages/chat_room.dart';
 import 'package:whatsup/features/contact/pages/select_contact.dart';
 import 'package:whatsup/features/group/pages/create_group.dart';

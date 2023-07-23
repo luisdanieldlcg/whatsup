@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/enum/status.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
@@ -21,7 +22,7 @@ class UserStatusLoader extends ConsumerWidget {
           () => UserListTile(
             onTap: () {
               void pickStatusImage() async {
-                final image = await pickGalleryImage(context);
+                final image = await FilePicker.pickFile(FilePickerSource.galleryImage);
                 image.match(
                   () {},
                   (file) {

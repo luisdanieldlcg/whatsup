@@ -1,13 +1,7 @@
-import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:intl/intl.dart';
-
-import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
-import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/error.dart';
@@ -72,25 +66,23 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
           itemCount: messages.length,
           itemBuilder: (context, index) {
             final message = messages[index];
-            tryMarkMessageAsSeen(message);
+            tryMarkMessageAsSeen(userId, message);
             final repeatedSender = index > 0 && messages[index - 1].senderId == message.senderId;
             final isMyMessage = message.senderId == userId;
             final sentAt = message.timeSent;
-
-            final showTimeStamp =
+            final shouldSentTime =
                 index == 0 || sentAt.difference(messages[index - 1].timeSent).inDays > 0;
-            var time = sentAt;
-            if (index == messages.length - 1) {
-              time = sentAt.add(const Duration(hours: 12));
-            }
+            final isMostRecent = index == messages.length - 1;
+
             return Column(
               children: [
-                if (showTimeStamp) ...{
-                  ChatTimeBubble(time: time),
+                if (shouldSentTime) ...{
+                  ChatTimeBubble(time: sentAt),
                 },
                 ChatBubble(
                   repeatedSender: repeatedSender,
                   isSenderMessage: isMyMessage,
+                  isMostRecent: isMostRecent,
                   model: message,
                   receiverName: widget.receiverName,
                 ),
@@ -106,9 +98,8 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
     );
   }
 
-  void tryMarkMessageAsSeen(MessageModel message) {
-    final activeUser = ref.read(authControllerProvider).currentUser.unwrap().uid;
-    if (!message.isRead && message.recvId == activeUser) {
+  void tryMarkMessageAsSeen(String userId, MessageModel message) {
+    if (!message.isRead && message.recvId == userId) {
       ref.read(chatControllerProvider).markMessageAsSeen(
             receiverId: widget.receiverId,
             messageId: message.uid,
