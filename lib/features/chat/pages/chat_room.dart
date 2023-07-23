@@ -9,10 +9,10 @@ import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/call/controller/call_controller.dart';
 import 'package:whatsup/features/call/widgets/call_invitation_button.dart';
-import 'package:whatsup/features/chat/widgets/chat_messages.dart';
+import 'package:whatsup/features/chat/widgets/message_list.dart';
 import 'package:whatsup/features/chat/widgets/chat_room_app_bar.dart';
 import 'package:whatsup/features/chat/widgets/chat_room_scaffold.dart';
-import 'package:whatsup/features/chat/widgets/chat_textfield.dart';
+import 'package:whatsup/features/chat/widgets/chat_input_area.dart';
 
 class ChatRoomPage extends ConsumerWidget {
   final String streamId;
@@ -40,13 +40,13 @@ class ChatRoomPage extends ConsumerWidget {
       body: Column(
         children: [
           Expanded(
-            child: ChatMessages(
+            child: MessageList(
               receiverId: streamId,
               receiverName: name,
               isGroup: isGroup,
             ),
           ),
-          ChatTextField(
+          ChatInputArea(
             receiverId: streamId,
             receiverName: name,
             isGroup: isGroup,

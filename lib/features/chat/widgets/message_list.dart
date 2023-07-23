@@ -7,17 +7,18 @@ import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/auth/controllers/auth.dart';
-import 'package:whatsup/features/chat/controller/chat_controller.dart';
-import 'package:whatsup/features/chat/widgets/message_card.dart';
+import 'package:whatsup/features/chat/pages/controller/chat_controller.dart';
+import 'package:whatsup/features/chat/widgets/chat_bubble.dart';
 
-class ChatMessages extends ConsumerStatefulWidget {
+class MessageList extends ConsumerStatefulWidget {
   final String receiverId;
   final String receiverName;
   final bool isGroup;
-  const ChatMessages({
+  const MessageList({
     super.key,
     required this.receiverId,
     required this.receiverName,
@@ -28,7 +29,7 @@ class ChatMessages extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ChatMessagesState();
 }
 
-class _ChatMessagesState extends ConsumerState<ChatMessages> {
+class _ChatMessagesState extends ConsumerState<MessageList> {
   final scroll = ScrollController();
 
   @override
@@ -42,23 +43,12 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
     scroll.dispose();
   }
 
-  void onMessageSwipe(String msg, bool isMyMessage, ChatMessageType replyType, String to) {
-    ref.read(messageReplyProvider.notifier).update((state) => Some(
-          MessageReply(
-            repliedTo: to,
-            message: msg,
-            isSenderMessage: isMyMessage,
-            type: replyType,
-          ),
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
     final liveStream = widget.isGroup
         ? ref.watch(groupMessagesStreamProvider(widget.receiverId))
         : ref.watch(messagesStreamProvider(widget.receiverId));
-
+    final userId = getUserId(ref);
     return liveStream.when(
       data: (messages) {
         if (messages.isEmpty) {
@@ -80,18 +70,13 @@ class _ChatMessagesState extends ConsumerState<ChatMessages> {
           itemBuilder: (context, index) {
             final message = messages[index];
             tryMarkMessageAsSeen(message);
-
-            final isMyMessage =
-                message.senderId == ref.read(authControllerProvider).currentUser.unwrap().uid;
-            return MessageCard(
-              actor: isMyMessage ? Actor.sender : Actor.receiver,
+            final repeatedSender = index > 0 && messages[index - 1].senderId == message.senderId;
+            final isMyMessage = message.senderId == userId;
+            return ChatBubble(
+              repeatedSender: repeatedSender,
+              isSenderMessage: isMyMessage,
               model: message,
-              onRightSwipe: () => onMessageSwipe(
-                message.message,
-                isMyMessage,
-                message.type,
-                widget.receiverName,
-              ),
+              receiverName: widget.receiverName,
             );
           },
         );

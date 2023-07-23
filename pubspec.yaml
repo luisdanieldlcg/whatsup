@@ -55,6 +55,8 @@ dependencies:
   flutter_dotenv: ^5.1.0
   zego_uikit_prebuilt_call: ^3.10.4
   zego_uikit_signaling_plugin: ^2.2.0
+  chat_bubbles: ^1.4.1
+  bubble: ^1.2.1
 
 dev_dependencies:
   flutter_test:

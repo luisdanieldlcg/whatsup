@@ -12,14 +12,14 @@ import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/misc.dart';
-import 'package:whatsup/features/chat/controller/chat_controller.dart';
+import 'package:whatsup/features/chat/pages/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/reply_container.dart';
 
-class ChatTextField extends ConsumerStatefulWidget {
+class ChatInputArea extends ConsumerStatefulWidget {
   final String receiverId;
   final String receiverName;
   final bool isGroup;
-  const ChatTextField({
+  const ChatInputArea({
     super.key,
     required this.receiverId,
     required this.receiverName,
@@ -27,10 +27,10 @@ class ChatTextField extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ChatTextFieldState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ChatInputAreaState();
 }
 
-class _ChatTextFieldState extends ConsumerState<ChatTextField> {
+class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   final messageController = TextEditingController();
   Option<FlutterSoundRecorder> soundRecorder = const None();
   bool isSoundRecorderReady = false;
@@ -224,11 +224,10 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
     } else {
       // user is typing
       ref.read(chatControllerProvider).sendText(
-            context: context,
-            text: messageController.text,
-            receiverId: widget.receiverId,
-            isGroup: widget.isGroup
-          );
+          context: context,
+          text: messageController.text,
+          receiverId: widget.receiverId,
+          isGroup: widget.isGroup);
     }
 
     messageController.clear();
