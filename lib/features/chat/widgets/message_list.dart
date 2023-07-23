@@ -1,7 +1,9 @@
+import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:intl/intl.dart';
 
 import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
@@ -13,6 +15,7 @@ import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/auth/controllers/auth.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/chat_bubble.dart';
+import 'package:whatsup/features/chat/widgets/chat_time_bubble.dart';
 
 class MessageList extends ConsumerStatefulWidget {
   final String receiverId;
@@ -72,11 +75,26 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
             tryMarkMessageAsSeen(message);
             final repeatedSender = index > 0 && messages[index - 1].senderId == message.senderId;
             final isMyMessage = message.senderId == userId;
-            return ChatBubble(
-              repeatedSender: repeatedSender,
-              isSenderMessage: isMyMessage,
-              model: message,
-              receiverName: widget.receiverName,
+            final sentAt = message.timeSent;
+
+            final showTimeStamp =
+                index == 0 || sentAt.difference(messages[index - 1].timeSent).inDays > 0;
+            var time = sentAt;
+            if (index == messages.length - 1) {
+              time = sentAt.add(const Duration(hours: 12));
+            }
+            return Column(
+              children: [
+                if (showTimeStamp) ...{
+                  ChatTimeBubble(time: time),
+                },
+                ChatBubble(
+                  repeatedSender: repeatedSender,
+                  isSenderMessage: isMyMessage,
+                  model: message,
+                  receiverName: widget.receiverName,
+                ),
+              ],
             );
           },
         );

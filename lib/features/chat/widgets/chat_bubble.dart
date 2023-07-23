@@ -27,7 +27,7 @@ class ChatBubble extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkEnabled = ref.watch(themeNotifierProvider) == Brightness.dark;
 
-    final darkBubbleColor = isSenderMessage ? kSenderMessageColorDark : kReceiverMessageColor;
+    final darkBubbleColor = isSenderMessage ? kSenderMessageColorDark : kReceiverMessageColorDark;
     final lightBubbleColor = isSenderMessage ? kSenderMessageColorLight : Colors.white;
     final alignment = isSenderMessage ? Alignment.topRight : Alignment.topLeft;
     final nip = isSenderMessage ? BubbleNip.rightTop : BubbleNip.leftTop;

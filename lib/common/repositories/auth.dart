@@ -61,7 +61,9 @@ class AuthRepository {
         codeSent: (id, resendToken) async {
           onCodeSent(id);
         },
-        codeAutoRetrievalTimeout: (id) {},
+        codeAutoRetrievalTimeout: (id) {
+          
+        },
       );
     } on FirebaseAuthException catch (e) {
       onError(_getOtpErrorMsg(e.code));
