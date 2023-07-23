@@ -44,7 +44,6 @@ dependencies:
   uuid: ^3.0.7
   intl: ^0.18.1
   cached_network_image: ^3.2.3
-  cached_video_player: ^2.0.4
   emoji_picker_flutter: ^1.6.1
   flutter_sound: ^9.2.13
   path_provider: ^2.0.15
@@ -53,10 +52,11 @@ dependencies:
   swipe_to: ^1.0.2
   story_view: ^0.15.0
   flutter_dotenv: ^5.1.0
-  zego_uikit_prebuilt_call: ^3.10.4
+  zego_uikit_prebuilt_call: ^3.10.6
   zego_uikit_signaling_plugin: ^2.2.0
-  chat_bubbles: ^1.4.1
   bubble: ^1.2.1
+  video_player: ^2.7.0
+  chewie: ^1.5.0
 
 dev_dependencies:
   flutter_test:

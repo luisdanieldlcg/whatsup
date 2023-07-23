@@ -12,7 +12,7 @@ import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/misc.dart';
-import 'package:whatsup/features/chat/pages/controller/chat_controller.dart';
+import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/reply_container.dart';
 
 class ChatInputArea extends ConsumerStatefulWidget {

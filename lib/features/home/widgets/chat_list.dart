@@ -4,7 +4,7 @@ import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
-import 'package:whatsup/features/chat/pages/controller/chat_controller.dart';
+import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/chat_tile.dart';
 import 'package:whatsup/router.dart';
 

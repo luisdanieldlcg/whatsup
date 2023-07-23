@@ -20,7 +20,7 @@ class MessageDisplay extends ConsumerWidget {
       case ChatMessageType.image:
         return CachedNetworkImage(imageUrl: message);
       case ChatMessageType.video:
-        return VideoPlayer(videoUrl: message);
+        return ChatVideoPlayer(url: message);
       case ChatMessageType.audio:
         return AudioMessagePlayer(message: message);
       default:
