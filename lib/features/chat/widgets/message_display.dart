@@ -20,7 +20,15 @@ class MessageDisplay extends ConsumerWidget {
       case ChatMessageType.image:
         return ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: CachedNetworkImage(imageUrl: message),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.7,
+              maxHeight: MediaQuery.of(context).size.height * 0.5,
+            ),
+            child: CachedNetworkImage(
+              imageUrl: message,
+            ),
+          ),
         );
       case ChatMessageType.video:
         return ChatVideoPlayer(url: message);

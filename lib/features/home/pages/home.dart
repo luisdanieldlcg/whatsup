@@ -4,7 +4,7 @@ import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/common/util/misc.dart';
-import 'package:whatsup/features/chat/call/widgets/call_list.dart';
+import 'package:whatsup/features/call/widgets/call_list.dart';
 import 'package:whatsup/features/home/widgets/chat_list.dart';
 import 'package:whatsup/features/status/widgets/status_list.dart';
 import 'package:whatsup/router.dart';

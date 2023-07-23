@@ -6,7 +6,7 @@ import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
-import 'package:whatsup/features/chat/call/controller/call_controller.dart';
+import 'package:whatsup/features/call/controller/call_controller.dart';
 
 class CallList extends ConsumerStatefulWidget {
   const CallList({super.key});
