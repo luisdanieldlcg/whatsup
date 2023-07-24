@@ -63,7 +63,7 @@
 		<key>NSCameraUsageDescription</key>
 		<string>Take photos</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Microphone use</string>
+		<string>This app requires Mic permission.</string>
 		<key>NSContactsUsageDescription</key>
 		<string>Messaging with my contacts</string>
 		<key>UIStatusBarHidden</key>

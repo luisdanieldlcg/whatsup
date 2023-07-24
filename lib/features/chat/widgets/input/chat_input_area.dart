@@ -15,6 +15,7 @@ import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_input_card.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_keyboard.dart';
+import 'package:audio_waveforms/audio_waveforms.dart';
 
 class ChatInputArea extends ConsumerStatefulWidget {
   final String receiverId;
@@ -34,6 +35,7 @@ class ChatInputArea extends ConsumerStatefulWidget {
 class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   final _inputController = TextEditingController();
   Option<FlutterSoundRecorder> soundRecorder = const None();
+  final _audioController = RecorderController();
   bool isSoundRecorderReady = false;
   bool isRecording = false;
   bool isTyping = false;
@@ -60,32 +62,52 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
             openVideoGallery: attachGalleryVideo,
           ),
           const SizedBox(height: 3),
-          Row(
-            children: [
-              Expanded(
-                child: ChatKeyboard(
-                  controller: _inputController,
-                  showReplyBox: isShowingReply,
-                  receiverName: widget.receiverName,
-                  attachFile: toggleAttachFileSheet,
-                  attachCamera: attachCamera,
-                  onEmojiTapped: toggleEmojiKeyboard,
-                  onChanged: updateTypingStatus,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 3, right: 3, bottom: 5),
-                child: SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: FloatingActionButton(
-                    elevation: 0,
-                    onPressed: sendText,
-                    child: Icon(micIcon),
+          SafeArea(
+            child: Row(
+              children: [
+                if (isRecording) ...{
+                  AudioWaveforms(
+                    enableGesture: true,
+                    size: Size(MediaQuery.of(context).size.width / 2, 50),
+                    recorderController: _audioController,
+                    waveStyle: const WaveStyle(
+                      waveColor: Colors.white,
+                      extendWaveform: true,
+                      showMiddleLine: false,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: const Color(0xFF1E1B26),
+                    ),
+                    padding: const EdgeInsets.only(left: 18),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                  ),
+                },
+                Expanded(
+                  child: ChatKeyboard(
+                    controller: _inputController,
+                    showReplyBox: isShowingReply,
+                    receiverName: widget.receiverName,
+                    attachFile: toggleAttachFileSheet,
+                    attachCamera: attachCamera,
+                    onEmojiTapped: toggleEmojiKeyboard,
+                    onChanged: updateTypingStatus,
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, right: 3, bottom: 5),
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: FloatingActionButton(
+                      elevation: 0,
+                      onPressed: sendText,
+                      child: Icon(micIcon),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           AnimatedContainer(
             height: shouldRenderEmojiKeyboard ? 300 : 0,
@@ -145,21 +167,38 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
         );
   }
 
+  void toggleRecording() async {
+    // if (!isSoundRecorderReady) return;
+    // // check if it's recording
+    // final tempDir = await getTemporaryDirectory();
+    // final path = '${tempDir.path}/flutter_sound.aac';
+    // if (isRecording) {
+    //   await soundRecorder.unwrap().stopRecorder();
+    //   sendFile(File(path), ChatMessageType.audio);
+    // } else {
+    //   await soundRecorder.unwrap().startRecorder(toFile: path);
+    // }
+    // setState(() {
+    //   isRecording = !isRecording;
+    // });
+
+    final tempDir = await getTemporaryDirectory();
+    final path = '${tempDir.path}/flutter_sound.aac';
+    if (isRecording) {
+      _audioController.stop();
+      sendFile(File(path), ChatMessageType.audio);
+    } else {
+      _audioController.record(path: path);
+    }
+
+    setState(() {
+      isRecording = !isRecording;
+    });
+  }
+
   void sendText() async {
     if (!isTyping) {
-      if (!isSoundRecorderReady) return;
-      // check if it's recording
-      final tempDir = await getTemporaryDirectory();
-      final path = '${tempDir.path}/flutter_sound.aac';
-      if (isRecording) {
-        await soundRecorder.unwrap().stopRecorder();
-        sendFile(File(path), ChatMessageType.audio);
-      } else {
-        await soundRecorder.unwrap().startRecorder(toFile: path);
-      }
-      setState(() {
-        isRecording = !isRecording;
-      });
+      toggleRecording();
     } else {
       // user is typing
       ref.read(chatControllerProvider).sendText(
@@ -221,6 +260,7 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   void dispose() {
     super.dispose();
     _inputController.dispose();
+    _audioController.dispose();
     soundRecorder.unwrap().closeRecorder();
     isSoundRecorderReady = false;
   }

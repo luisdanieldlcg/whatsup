@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/enum/message.dart';
-import 'package:whatsup/features/chat/widgets/audio_player.dart';
-import 'package:whatsup/features/chat/widgets/video_player.dart';
+import 'package:whatsup/features/chat/widgets/chat_audio_player.dart';
+import 'package:whatsup/features/chat/widgets/chat_video_player.dart';
 
 class MessageDisplay extends ConsumerWidget {
   final ChatMessageType type;
@@ -33,7 +33,7 @@ class MessageDisplay extends ConsumerWidget {
       case ChatMessageType.video:
         return ChatVideoPlayer(url: message);
       case ChatMessageType.audio:
-        return AudioMessagePlayer(message: message);
+        return ChatAudioPlayer(message: message);
       default:
         return Text(
           message,

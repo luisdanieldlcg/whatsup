@@ -1,9 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class AudioMessagePlayer extends StatelessWidget {
+class ChatAudioPlayer extends StatelessWidget {
   final String message;
-  const AudioMessagePlayer({
+  const ChatAudioPlayer({
     super.key,
     required this.message,
   });

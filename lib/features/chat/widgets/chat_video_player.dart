@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chewie/chewie.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:video_player/video_player.dart';
+import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 
 enum VideoDataSource {
@@ -28,7 +30,7 @@ class ChatVideoPlayer extends ConsumerStatefulWidget {
 class _ChatVideoPlayerState extends ConsumerState<ChatVideoPlayer> {
   late VideoPlayerController _videoController;
   bool isPlaying = false;
-  late ChewieController _chewieController;
+  Option<ChewieController> _chewieController = const None();
 
   @override
   void initState() {
@@ -47,11 +49,11 @@ class _ChatVideoPlayerState extends ConsumerState<ChatVideoPlayer> {
     }
     _videoController.initialize().then((_) {
       setState(() {
-        _chewieController = ChewieController(
+        _chewieController = Some(ChewieController(
           videoPlayerController: _videoController,
           aspectRatio: 16 / 9,
           materialProgressColors: ChewieProgressColors(handleColor: Colors.red),
-        );
+        ));
       });
     });
   }
@@ -60,9 +62,10 @@ class _ChatVideoPlayerState extends ConsumerState<ChatVideoPlayer> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: _videoController.value.aspectRatio,
-      child: _videoController.value.isInitialized
-          ? Chewie(controller: _chewieController)
-          : const WorkProgressIndicator(),
+      child: _chewieController.match(
+        () => const WorkProgressIndicator(),
+        (chewieController) => Chewie(controller: chewieController),
+      ),
     );
   }
 
@@ -70,6 +73,8 @@ class _ChatVideoPlayerState extends ConsumerState<ChatVideoPlayer> {
   void dispose() {
     super.dispose();
     _videoController.dispose();
-    _chewieController.dispose();
+    if (_chewieController.isSome()) {
+      _chewieController.unwrap().dispose();
+    }
   }
 }
