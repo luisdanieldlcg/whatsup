@@ -75,7 +75,7 @@ class ChatController {
     required BuildContext context,
     required String receiverId,
     required File file,
-    required ChatMessageType type,
+    required MessageType type,
     required bool isGroup,
   }) {
     ref.read(userFetchProvider).whenData((value) {

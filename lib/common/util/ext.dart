@@ -27,20 +27,20 @@ extension StatusConverter on String {
 }
 
 extension ChatMessageConverter on String {
-  ChatMessageType intoChatMessage() {
+  MessageType intoChatMessage() {
     switch (this) {
       case 'text':
-        return ChatMessageType.text;
+        return MessageType.text;
       case 'image':
-        return ChatMessageType.image;
+        return MessageType.image;
       case 'audio':
-        return ChatMessageType.audio;
+        return MessageType.audio;
       case 'video':
-        return ChatMessageType.video;
+        return MessageType.video;
       case 'gif':
-        return ChatMessageType.gif;
+        return MessageType.gif;
       default:
-        return ChatMessageType.text;
+        return MessageType.text;
     }
   }
 }

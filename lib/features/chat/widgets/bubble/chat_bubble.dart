@@ -1,17 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:intl/intl.dart';
 import 'package:swipe_to/swipe_to.dart';
-import 'package:whatsup/common/enum/message.dart';
 
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
-import 'package:whatsup/features/chat/widgets/chat_bubble_bottom.dart';
-import 'package:whatsup/features/chat/widgets/message_display.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_bubble_bottom.dart';
 
 class ChatBubble extends ConsumerWidget {
   final bool isSenderMessage;
@@ -19,6 +15,7 @@ class ChatBubble extends ConsumerWidget {
   final bool repeatedSender;
   final bool isMostRecent;
   final String receiverName;
+  final Widget? child;
   const ChatBubble({
     Key? key,
     required this.isSenderMessage,
@@ -26,6 +23,7 @@ class ChatBubble extends ConsumerWidget {
     required this.repeatedSender,
     required this.isMostRecent,
     required this.receiverName,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -60,29 +58,8 @@ class ChatBubble extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const SizedBox(height: 5),
-            if (model.type == ChatMessageType.image) ...{
-              Stack(
-                children: [
-                  MessageDisplay(
-                    type: model.type,
-                    message: model.message,
-                  ),
-                  Positioned(
-                    bottom: 3,
-                    right: 7,
-                    child: ChatBubbleBottom(model: model, isDark: isDarkEnabled),
-                  )
-                ],
-              ),
-              const SizedBox(height: 8),
-            } else ...{
-              MessageDisplay(
-                type: model.type,
-                message: model.message,
-              ),
-              ChatBubbleBottom(model: model, isDark: isDarkEnabled),
-            }
+            child ?? const SizedBox.shrink(),
+            ChatBubbleBottom(model: model, isDark: isDarkEnabled),
           ],
         ),
       ),

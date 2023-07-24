@@ -63,7 +63,7 @@ class ChatRepository {
     required String receiverId,
     required String text,
     required DateTime time,
-    required ChatMessageType type,
+    required MessageType type,
     required Option<MessageReply> reply,
     required bool isGroup,
   }) async {
@@ -83,7 +83,7 @@ class ChatRepository {
               : receiver.isNone()
                   ? ''
                   : receiver.unwrap().name,
-      repliedMessageType: reply.isNone() ? ChatMessageType.text : reply.unwrap().type,
+      repliedMessageType: reply.isNone() ? MessageType.text : reply.unwrap().type,
     );
     if (isGroup) {
       await _db.groups
@@ -142,7 +142,7 @@ class ChatRepository {
     required String receiverId,
     required UserModel sender,
     required Ref ref,
-    required ChatMessageType type,
+    required MessageType type,
     required Option<MessageReply> reply,
     required bool isGroup,
   }) async {
@@ -151,7 +151,7 @@ class ChatRepository {
       final messageId = const Uuid().v4();
 
       String url = await _storage.uploadFile(
-        path: 'chat/${type.type}/${sender.uid}/$receiverId',
+        path: 'chat/${type.type}/${sender.uid}/$receiverId/${time.millisecondsSinceEpoch}}',
         file: file,
       );
       Option<UserModel> recvUser = none();
@@ -167,16 +167,16 @@ class ChatRepository {
 
       String message;
       switch (type) {
-        case ChatMessageType.image:
+        case MessageType.image:
           message = '📷 Photo';
           break;
-        case ChatMessageType.video:
+        case MessageType.video:
           message = '📸 Video';
           break;
-        case ChatMessageType.audio:
+        case MessageType.audio:
           message = '🎵 Audio';
           break;
-        case ChatMessageType.gif:
+        case MessageType.gif:
           message = 'GIF';
           break;
         default:
@@ -184,12 +184,13 @@ class ChatRepository {
       }
 
       updateChat(
-          sender: sender,
-          receiver: recvUser,
-          receiverId: receiverId,
-          messageTime: time,
-          message: message,
-          isGroup: isGroup);
+        sender: sender,
+        receiver: recvUser,
+        receiverId: receiverId,
+        messageTime: time,
+        message: message,
+        isGroup: isGroup,
+      );
 
       saveMessage(
         id: messageId,
@@ -245,7 +246,7 @@ class ChatRepository {
           receiverId: receiverId,
           text: message,
           time: time,
-          type: ChatMessageType.text,
+          type: MessageType.text,
           reply: reply,
           isGroup: isGroup);
     } catch (e) {

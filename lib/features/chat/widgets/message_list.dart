@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
-import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/progress.dart';
-import 'package:whatsup/features/auth/controllers/auth.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
-import 'package:whatsup/features/chat/widgets/chat_bubble.dart';
-import 'package:whatsup/features/chat/widgets/chat_time_bubble.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_bubble.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_image_bubble.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_time_bubble.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_audio_bubble.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_video_bubble.dart';
 
 class MessageList extends ConsumerStatefulWidget {
   final String receiverId;
@@ -45,6 +48,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
     final liveStream = widget.isGroup
         ? ref.watch(groupMessagesStreamProvider(widget.receiverId))
         : ref.watch(messagesStreamProvider(widget.receiverId));
+    final isDark = ref.watch(themeNotifierProvider) == Brightness.dark;
     final userId = getUserId(ref);
     return liveStream.when(
       data: (messages) {
@@ -70,22 +74,46 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
             final repeatedSender = index > 0 && messages[index - 1].senderId == message.senderId;
             final isMyMessage = message.senderId == userId;
             final sentAt = message.timeSent;
-            final shouldSentTime =
+            final shouldRenderTime =
                 index == 0 || sentAt.difference(messages[index - 1].timeSent).inDays > 0;
             final isMostRecent = index == messages.length - 1;
 
             return Column(
               children: [
-                if (shouldSentTime) ...{
+                if (shouldRenderTime) ...{
                   ChatTimeBubble(time: sentAt),
                 },
-                ChatBubble(
-                  repeatedSender: repeatedSender,
-                  isSenderMessage: isMyMessage,
-                  isMostRecent: isMostRecent,
-                  model: message,
-                  receiverName: widget.receiverName,
-                ),
+                switch (message.type) {
+                  MessageType.audio => ChatAudioBubble(
+                      message: message.message,
+                      isDark: isDark,
+                      isMyMessage: isMyMessage,
+                    ),
+                  MessageType.image => ChatImageBubble(
+                      model: message,
+                      isDark: isDark,
+                      isMessageSender: isMyMessage,
+                    ),
+                  MessageType.video => ChatVideoBubble(
+                      model: message,
+                      isSenderMessage: isMyMessage,
+                      isMostRecentMessage: isMostRecent,
+                      receiverName: widget.receiverName,
+                      isRepeatedSender: repeatedSender,
+                      src: VideoDataSource.network,
+                    ),
+                  _ => ChatBubble(
+                      repeatedSender: repeatedSender,
+                      isSenderMessage: isMyMessage,
+                      isMostRecent: isMostRecent,
+                      model: message,
+                      receiverName: widget.receiverName,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(message.message),
+                      ),
+                    ),
+                },
               ],
             );
           },

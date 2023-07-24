@@ -15,7 +15,6 @@ import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_input_card.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_keyboard.dart';
-import 'package:audio_waveforms/audio_waveforms.dart';
 
 class ChatInputArea extends ConsumerStatefulWidget {
   final String receiverId;
@@ -35,7 +34,6 @@ class ChatInputArea extends ConsumerStatefulWidget {
 class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   final _inputController = TextEditingController();
   Option<FlutterSoundRecorder> soundRecorder = const None();
-  final _audioController = RecorderController();
   bool isSoundRecorderReady = false;
   bool isRecording = false;
   bool isTyping = false;
@@ -65,24 +63,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
           SafeArea(
             child: Row(
               children: [
-                if (isRecording) ...{
-                  AudioWaveforms(
-                    enableGesture: true,
-                    size: Size(MediaQuery.of(context).size.width / 2, 50),
-                    recorderController: _audioController,
-                    waveStyle: const WaveStyle(
-                      waveColor: Colors.white,
-                      extendWaveform: true,
-                      showMiddleLine: false,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      color: const Color(0xFF1E1B26),
-                    ),
-                    padding: const EdgeInsets.only(left: 18),
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                  ),
-                },
                 Expanded(
                   child: ChatKeyboard(
                     controller: _inputController,
@@ -137,7 +117,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   @override
   void initState() {
     super.initState();
-    soundRecorder = Some(FlutterSoundRecorder());
     openAudio();
   }
 
@@ -152,11 +131,12 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
     if (status != PermissionStatus.granted) {
       return;
     }
-    await soundRecorder.unwrap().openRecorder();
+    final audio = await FlutterSoundRecorder().openRecorder();
+    soundRecorder = Option.fromNullable(audio);
     isSoundRecorderReady = true;
   }
 
-  void sendFile(File file, ChatMessageType type) async {
+  void sendFile(File file, MessageType type) async {
     closeFileSheet();
     ref.read(chatControllerProvider).sendFile(
           context: context,
@@ -168,29 +148,16 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   }
 
   void toggleRecording() async {
-    // if (!isSoundRecorderReady) return;
-    // // check if it's recording
-    // final tempDir = await getTemporaryDirectory();
-    // final path = '${tempDir.path}/flutter_sound.aac';
-    // if (isRecording) {
-    //   await soundRecorder.unwrap().stopRecorder();
-    //   sendFile(File(path), ChatMessageType.audio);
-    // } else {
-    //   await soundRecorder.unwrap().startRecorder(toFile: path);
-    // }
-    // setState(() {
-    //   isRecording = !isRecording;
-    // });
-
+    if (!isSoundRecorderReady) return;
+    // check if it's recording
     final tempDir = await getTemporaryDirectory();
     final path = '${tempDir.path}/flutter_sound.aac';
     if (isRecording) {
-      _audioController.stop();
-      sendFile(File(path), ChatMessageType.audio);
+      await soundRecorder.unwrap().stopRecorder();
+      sendFile(File(path), MessageType.audio);
     } else {
-      _audioController.record(path: path);
+      await soundRecorder.unwrap().startRecorder(toFile: path);
     }
-
     setState(() {
       isRecording = !isRecording;
     });
@@ -232,21 +199,21 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   void attachGalleryImage() async {
     final maybeImage = await FilePicker.pickFile(FilePickerSource.galleryImage);
     if (maybeImage.isSome()) {
-      sendFile(maybeImage.unwrap(), ChatMessageType.image);
+      sendFile(maybeImage.unwrap(), MessageType.image);
     }
   }
 
   void attachCamera() async {
     final image = await FilePicker.pickFile(FilePickerSource.camera);
     if (image.isSome()) {
-      sendFile(image.unwrap(), ChatMessageType.image);
+      sendFile(image.unwrap(), MessageType.image);
     }
   }
 
   void attachGalleryVideo() async {
     final maybeImage = await FilePicker.pickFile(FilePickerSource.galleryVideo);
     if (maybeImage.isSome()) {
-      sendFile(maybeImage.unwrap(), ChatMessageType.video);
+      sendFile(maybeImage.unwrap(), MessageType.video);
     }
   }
 
@@ -260,7 +227,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   void dispose() {
     super.dispose();
     _inputController.dispose();
-    _audioController.dispose();
     soundRecorder.unwrap().closeRecorder();
     isSoundRecorderReady = false;
   }

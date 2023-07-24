@@ -15,7 +15,7 @@ class MessageReply {
   final String message;
   // whether this message is sent by the current user
   final bool isSenderMessage;
-  final ChatMessageType type;
+  final MessageType type;
 
   const MessageReply({
     required this.repliedTo,

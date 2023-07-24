@@ -10,8 +10,8 @@ class MessageModel {
   final String message;
   final String repliedMessage;
   final String repliedTo;
-  final ChatMessageType repliedMessageType;
-  final ChatMessageType type;
+  final MessageType repliedMessageType;
+  final MessageType type;
   final DateTime timeSent;
   final bool isRead;
 
@@ -35,8 +35,8 @@ class MessageModel {
     String? message,
     String? repliedMessage,
     String? repliedTo,
-    ChatMessageType? repliedMessageType,
-    ChatMessageType? type,
+    MessageType? repliedMessageType,
+    MessageType? type,
     DateTime? timeSent,
     bool? isRead,
   }) {
