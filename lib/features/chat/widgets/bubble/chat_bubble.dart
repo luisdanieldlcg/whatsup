@@ -1,8 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:whatsup/common/enum/message.dart';
 
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
@@ -16,6 +18,7 @@ class ChatBubble extends ConsumerWidget {
   final bool isMostRecent;
   final String receiverName;
   final Widget? child;
+  final String audioLabel;
   const ChatBubble({
     Key? key,
     required this.isSenderMessage,
@@ -24,6 +27,7 @@ class ChatBubble extends ConsumerWidget {
     required this.isMostRecent,
     required this.receiverName,
     this.child,
+    this.audioLabel = '',
   }) : super(key: key);
 
   @override
@@ -48,19 +52,29 @@ class ChatBubble extends ConsumerWidget {
         margin: margin,
         alignment: alignment,
         radius: const Radius.circular(12),
-        padding: const BubbleEdges.only(left: 8, right: 8, top: 3, bottom: 0),
+        padding: const BubbleEdges.only(left: 8, right: 8, top: 3, bottom: 6),
         nip: nip,
         showNip: showNip,
         borderWidth: 0.7,
         borderColor: isDarkEnabled ? Colors.grey.shade800 : Colors.grey.shade400,
         color: isDarkEnabled ? darkBubbleColor : lightBubbleColor,
         borderUp: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            child ?? const SizedBox.shrink(),
-            ChatBubbleBottom(model: model, isDark: isDarkEnabled),
-          ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              child ?? const SizedBox.shrink(),
+              ChatBubbleBottom(
+                model: model,
+                isDark: isDarkEnabled,
+                audioLabel: audioLabel,
+                isAudio: model.type == MessageType.audio,
+              ),
+            ],
+          ),
         ),
       ),
     );

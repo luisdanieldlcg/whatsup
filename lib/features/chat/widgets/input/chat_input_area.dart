@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:whatsup/common/enum/message.dart';
@@ -12,6 +14,7 @@ import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/util/file_picker.dart';
+import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/chat/controller/chat_controller.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_input_card.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_keyboard.dart';
@@ -39,6 +42,8 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   bool isTyping = false;
   bool shouldRenderEmojiKeyboard = false;
   bool showAttachFileSheet = false;
+  bool isRecordLongEnough = false;
+
   @override
   Widget build(BuildContext context) {
     final reply = ref.watch(messageReplyProvider);
@@ -132,6 +137,9 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       return;
     }
     final audio = await FlutterSoundRecorder().openRecorder();
+    if (audio != null) {
+      audio.setLogLevel(Level.error);
+    }
     soundRecorder = Option.fromNullable(audio);
     isSoundRecorderReady = true;
   }
@@ -154,9 +162,18 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
     final path = '${tempDir.path}/flutter_sound.aac';
     if (isRecording) {
       await soundRecorder.unwrap().stopRecorder();
-      sendFile(File(path), MessageType.audio);
+      if (isRecordLongEnough) {
+        sendFile(File(path), MessageType.audio);
+      }
     } else {
       await soundRecorder.unwrap().startRecorder(toFile: path);
+      Future.delayed(const Duration(milliseconds: 1001), () {
+        if (isRecording) {
+          isRecordLongEnough = true;
+        } else {
+          showSnackbar(context, 'Audio must be at least 1 second long');
+        }
+      });
     }
     setState(() {
       isRecording = !isRecording;

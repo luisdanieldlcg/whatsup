@@ -70,14 +70,15 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
           itemCount: messages.length,
           itemBuilder: (context, index) {
             final message = messages[index];
-            tryMarkMessageAsSeen(userId, message);
             final repeatedSender = index > 0 && messages[index - 1].senderId == message.senderId;
             final isMyMessage = message.senderId == userId;
             final sentAt = message.timeSent;
             final shouldRenderTime =
                 index == 0 || sentAt.difference(messages[index - 1].timeSent).inDays > 0;
             final isMostRecent = index == messages.length - 1;
-
+            if (message.type != MessageType.audio) {
+              markMessageAsSeen(userId, message);
+            }
             return Column(
               children: [
                 if (shouldRenderTime) ...{
@@ -85,9 +86,17 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
                 },
                 switch (message.type) {
                   MessageType.audio => ChatAudioBubble(
-                      message: message.message,
+                      message: message,
+                      isMostRecent: isMostRecent,
+                      receiverName: widget.receiverName,
+                      repeatedSender: repeatedSender,
                       isDark: isDark,
                       isMyMessage: isMyMessage,
+                      onAudioStarted: () {
+                        if (!message.isRead) {
+                          markMessageAsSeen(userId, message);
+                        }
+                      },
                     ),
                   MessageType.image => ChatImageBubble(
                       model: message,
@@ -126,7 +135,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
     );
   }
 
-  void tryMarkMessageAsSeen(String userId, MessageModel message) {
+  void markMessageAsSeen(String userId, MessageModel message) {
     if (!message.isRead && message.recvId == userId) {
       ref.read(chatControllerProvider).markMessageAsSeen(
             receiverId: widget.receiverId,

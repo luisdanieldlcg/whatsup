@@ -72,9 +72,9 @@ final darkTheme = ThemeData.dark().copyWith(
       foregroundColor: Colors.black,
     ),
   ),
-  snackBarTheme: SnackBarThemeData(
-    backgroundColor: kPrimaryColor.withOpacity(0.25).withAlpha(65),
-    contentTextStyle: const TextStyle(color: Colors.white),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: kDarkTextFieldBgColor,
+    contentTextStyle: TextStyle(color: Colors.white),
   ),
   // set underline text field color same as kPrimaryColor
   inputDecorationTheme: const InputDecorationTheme(
