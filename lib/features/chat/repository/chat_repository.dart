@@ -151,7 +151,7 @@ class ChatRepository {
       final messageId = const Uuid().v4();
 
       String url = await _storage.uploadFile(
-        path: 'chat/${type.type}/${sender.uid}/$receiverId/${time.millisecondsSinceEpoch}}',
+        path: 'chat/${type.type}/${sender.uid}/$receiverId/${time.millisecondsSinceEpoch}',
         file: file,
       );
       Option<UserModel> recvUser = none();
