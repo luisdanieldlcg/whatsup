@@ -74,8 +74,10 @@ class ChatBubble extends ConsumerWidget {
                   isDarkEnabled: isDarkEnabled,
                   model: model,
                 )
+              } else ...{
+                // ignore child if this is a reply
+                child ?? const SizedBox.shrink(),
               },
-              child ?? const SizedBox.shrink(),
               ChatBubbleBottom(
                 model: model,
                 isDark: isDarkEnabled,

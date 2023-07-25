@@ -9,6 +9,7 @@ import 'package:swipe_to/swipe_to.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
+import 'package:whatsup/features/chat/widgets/bubble/image_bubble.dart';
 
 class ChatImageBubble extends ConsumerWidget {
   final MessageModel model;
@@ -28,11 +29,13 @@ class ChatImageBubble extends ConsumerWidget {
     return SwipeTo(
       offsetDx: 0.16,
       onRightSwipe: () => makeReply(ref),
-      child: BubbleNormalImage(
+      child: ImageBubble(
+        isDark: isDark,
+        isReply: model.repliedMessage.isNotEmpty,
+        message: model,
         id: model.uid,
         isSender: isMessageSender,
-        seen: model.isRead,
-        delivered: true,
+        tail: false,
         color:
             isDark ? kPrimaryColor : kPrimaryColor.withOpacity(0.4).withAlpha(120).withGreen(165),
         image: CachedNetworkImage(

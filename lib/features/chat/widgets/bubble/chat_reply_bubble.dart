@@ -24,9 +24,7 @@ class ChatReplyBubble extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.only(top: 10, bottom: 12, left: 12, right: 0),
               decoration: BoxDecoration(
-                color: isDarkEnabled
-                    ? kReplyMessageColor.withOpacity(0.9)
-                    : Colors.grey.withOpacity(0.3),
+                color: isDarkEnabled ? Colors.black.withOpacity(0.2) : Colors.grey.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Column(
@@ -39,7 +37,8 @@ class ChatReplyBubble extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     model.repliedMessage,
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                        color: isDarkEnabled ? Colors.grey.shade400 : Colors.grey.shade700),
                   ),
                 ],
               ),
