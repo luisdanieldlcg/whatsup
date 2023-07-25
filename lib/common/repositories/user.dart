@@ -83,6 +83,7 @@ class UserRepository {
     return Option.of(json.data()!);
   }
 
+  /// Fetches a user by their phone number. It will return `None` if the user does not exists
   Future<Option<UserModel>> getUserByPhoneNumber(String normalizedPhoneNumber) async {
     final json = await users.where(kPhoneNumberField, isEqualTo: normalizedPhoneNumber).get();
     if (json.docs.isEmpty) {

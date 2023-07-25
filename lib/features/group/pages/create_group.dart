@@ -89,8 +89,9 @@ class _CreateGroupPageState extends ConsumerState<CreateGroupPage> {
             Stack(
               children: [
                 if (groupImage.isNone()) ...{
-                  const CircleAvatar(
-                    backgroundImage: NetworkImage(
+                  CircleAvatar(
+                    backgroundColor: Colors.grey.withOpacity(0.2),
+                    backgroundImage: const NetworkImage(
                       'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
                     ),
                     radius: 60,

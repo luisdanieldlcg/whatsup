@@ -23,22 +23,19 @@ class ChatBubbleBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     final fontColor = isDark ? Colors.grey.shade400 : Colors.grey.shade700;
     const double fontSize = 13;
+    // calc right margin for audio label to align it at the left
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (isAudio) ...{
-          const Spacer(),
-        },
-        Text(
-          audioLabel,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: fontColor,
-          ),
-        ),
-        if (isAudio) ...{
-          const Spacer(flex: 3),
-        },
+        // Text(
+        //   audioLabel,
+        //   style: TextStyle(
+        //     fontSize: fontSize,
+        //     color: fontColor,
+        //   ),
+        // ),
         Text(
           DateFormat.Hm().format(model.timeSent),
           style: TextStyle(
@@ -57,7 +54,7 @@ class ChatBubbleBottom extends StatelessWidget {
         } else ...{
           const SizedBox(height: 5),
           const Icon(
-            Icons.check,
+            Icons.done_all,
             size: 18,
             color: Colors.grey,
           ),

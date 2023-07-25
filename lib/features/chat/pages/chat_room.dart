@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/features/chat/widgets/input/chat_input_area.dart';
 import 'package:whatsup/features/chat/widgets/chat_room_app_bar.dart';
 import 'package:whatsup/features/chat/widgets/chat_room_scaffold.dart';
-import 'package:whatsup/features/chat/widgets/input/chat_input_area.dart';
 import 'package:whatsup/features/chat/widgets/message_list.dart';
 
 class ChatRoomPage extends ConsumerWidget {

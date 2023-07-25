@@ -33,6 +33,7 @@ class ChatListTile extends StatelessWidget {
       leading: CircleAvatar(
         radius: 24,
         backgroundImage: NetworkImage(avatarImage),
+        backgroundColor: Colors.grey.withOpacity(0.2),
       ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

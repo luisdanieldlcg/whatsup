@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, Brightness>(
@@ -10,8 +11,7 @@ class ThemeNotifier extends StateNotifier<Brightness> {
   ThemeNotifier() : super(_systemBrightness);
 
   static Brightness get _systemBrightness {
-    // return SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    return Brightness.dark;
+    return SchedulerBinding.instance.platformDispatcher.platformBrightness;
   }
 
   void toggle() {
@@ -48,6 +48,7 @@ final lightTheme = ThemeData.light().copyWith(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kPrimaryColor,
   ),
+  
 );
 
 final darkTheme = ThemeData.dark().copyWith(

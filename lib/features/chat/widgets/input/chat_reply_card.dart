@@ -52,11 +52,12 @@ class ChatReplyCard extends ConsumerWidget {
                   ),
                   const Spacer(),
                   IconButton(
+                    splashRadius: 1,
                     padding: EdgeInsets.zero,
                     onPressed: () => cancelReply(ref),
                     icon: Icon(
                       Icons.close,
-                      size: 16,
+                      size: 20,
                       color: Colors.grey.shade700,
                     ),
                   )

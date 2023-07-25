@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:swipe_to/swipe_to.dart';
-import 'package:whatsup/common/enum/message.dart';
 
+import 'package:whatsup/common/enum/message.dart';
 import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
@@ -20,6 +20,7 @@ class ChatBubble extends ConsumerWidget {
   final String receiverName;
   final Widget? child;
   final String audioLabel;
+  final bool isGroup;
   const ChatBubble({
     Key? key,
     required this.isSenderMessage,
@@ -29,6 +30,7 @@ class ChatBubble extends ConsumerWidget {
     required this.receiverName,
     this.child,
     this.audioLabel = '',
+    required this.isGroup,
   }) : super(key: key);
 
   @override
@@ -63,28 +65,51 @@ class ChatBubble extends ConsumerWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.7,
+            minWidth: 75,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          child: Stack(
             children: [
-              if (model.repliedMessage.isNotEmpty) ...{
-                // if this is a reply we want to show the message we are replying to
-                // in a opaqued card like whatsapp does
-                ChatReplyBubble(
-                  isDarkEnabled: isDarkEnabled,
-                  model: model,
-                )
-              } else ...{
-                // ignore child if this is a reply
-                child ?? const SizedBox.shrink(),
-              },
-              ChatBubbleBottom(
-                model: model,
-                isDark: isDarkEnabled,
-                audioLabel: audioLabel,
-                isReply: model.repliedMessage.isNotEmpty,
-                isAudio: model.type == MessageType.audio,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20, top: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (isGroup) ...{
+                      const SizedBox(height: 4),
+                      Text(
+                        '~ ${model.senderUsername}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDarkEnabled ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    },
+                    if (model.repliedMessage.isNotEmpty) ...{
+                      // if this is a reply we want to show the message we are replying to
+                      // in a opaqued card like whatsapp does
+                      ChatReplyBubble(
+                        isDarkEnabled: isDarkEnabled,
+                        model: model,
+                      )
+                    } else ...{
+                      // ignore child if this is a reply
+                      child ?? const SizedBox.shrink(),
+                    },
+                  ],
+                ),
               ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: ChatBubbleBottom(
+                  model: model,
+                  isDark: isDarkEnabled,
+                  audioLabel: audioLabel,
+                  isReply: model.repliedMessage.isNotEmpty,
+                  isAudio: model.type == MessageType.audio,
+                ),
+              )
             ],
           ),
         ),

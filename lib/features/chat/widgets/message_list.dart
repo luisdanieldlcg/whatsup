@@ -86,6 +86,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
                 },
                 switch (message.type) {
                   MessageType.audio => ChatAudioBubble(
+                      isGroup: widget.isGroup,
                       message: message,
                       isMostRecent: isMostRecent,
                       receiverName: widget.receiverName,
@@ -106,6 +107,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
                     ),
                   MessageType.video => ChatVideoBubble(
                       model: message,
+                      isGroup: widget.isGroup,
                       isSenderMessage: isMyMessage,
                       isMostRecentMessage: isMostRecent,
                       receiverName: widget.receiverName,
@@ -113,6 +115,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
                       src: VideoDataSource.network,
                     ),
                   _ => ChatBubble(
+                      isGroup: widget.isGroup,
                       repeatedSender: repeatedSender,
                       isSenderMessage: isMyMessage,
                       isMostRecent: isMostRecent,

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/file_picker.dart';
-import 'package:whatsup/common/util/misc.dart';
 import 'package:whatsup/features/call/widgets/call_list.dart';
 import 'package:whatsup/features/home/widgets/chat_list.dart';
 import 'package:whatsup/features/status/widgets/status_list.dart';
@@ -143,7 +142,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
           Navigator.pushNamed(context, PageRouter.selectContact);
         }
       },
-      child: Icon(controller.index == 0 ? Icons.comment : Icons.photo_camera, color: Colors.white),
+      child: Icon(controller.index == 1 ? Icons.photo_camera : Icons.comment, color: Colors.white),
     );
     return Column(
       children: [

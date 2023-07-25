@@ -25,6 +25,7 @@ class ChatVideoBubble extends ConsumerStatefulWidget {
   final String receiverName;
   final bool isRepeatedSender;
   final VideoDataSource src;
+  final bool isGroup;
 
   const ChatVideoBubble({
     required this.model,
@@ -33,6 +34,7 @@ class ChatVideoBubble extends ConsumerStatefulWidget {
     required this.receiverName,
     required this.isRepeatedSender,
     this.src = VideoDataSource.network,
+    required this.isGroup,
   });
 
   @override
@@ -74,6 +76,7 @@ class _ChatVideoPlayerState extends ConsumerState<ChatVideoBubble> {
   @override
   Widget build(BuildContext context) {
     return ChatBubble(
+      isGroup: widget.isGroup,
       receiverName: widget.receiverName,
       repeatedSender: widget.isRepeatedSender,
       model: widget.model,

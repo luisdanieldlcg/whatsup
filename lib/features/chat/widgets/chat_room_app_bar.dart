@@ -96,6 +96,7 @@ class _OneToOneChatAppBar extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(right: 15),
               child: CircleAvatar(
+                backgroundColor: Colors.grey.withOpacity(0.2),
                 backgroundImage: NetworkImage(roomAvatar),
               ),
             ),
@@ -141,6 +142,7 @@ class _GroupChatAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
           child: CircleAvatar(
+            backgroundColor: Colors.grey.withOpacity(0.2),
             backgroundImage: NetworkImage(roomAvatar),
           ),
         ),

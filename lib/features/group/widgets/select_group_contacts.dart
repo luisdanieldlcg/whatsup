@@ -5,6 +5,7 @@ import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
+import 'package:whatsup/common/widgets/list_tile_shimmer.dart';
 import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
 
@@ -71,14 +72,14 @@ class _SelectGroupContactsState extends ConsumerState<SelectGroupContacts> {
                       );
                     },
                     error: (err, trace) => UnhandledError(error: err.toString()),
-                    loading: () => const WorkProgressIndicator(),
+                    loading: () => const ListTileShimmer(count: 2),
                   );
                 },
               ),
             );
           },
           error: (err, trace) => UnhandledError(error: err.toString()),
-          loading: () => const WorkProgressIndicator(),
+          loading: () => const ListTileShimmer(count: 2),
         );
   }
 }

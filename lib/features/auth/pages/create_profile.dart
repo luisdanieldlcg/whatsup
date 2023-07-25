@@ -34,8 +34,9 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
   CircleAvatar get profileImage {
     const size = 64.0;
     return profilePic.match(
-      () => const CircleAvatar(
-        backgroundImage: NetworkImage(
+      () => CircleAvatar(
+        backgroundColor: Colors.grey.withOpacity(.2),
+        backgroundImage: const NetworkImage(
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
         ),
         radius: size,

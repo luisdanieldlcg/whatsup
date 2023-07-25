@@ -69,7 +69,9 @@ class ChatRepository {
   }) async {
     final newMsg = MessageModel(
       uid: id,
+      senderUsername: sender.name,
       senderId: sender.uid,
+      senderProfileImage: sender.profileImage,
       recvId: receiverId,
       message: text,
       type: type,

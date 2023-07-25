@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:whatsup/common/enum/message.dart';
@@ -10,6 +11,8 @@ class MessageModel {
   final String message;
   final String repliedMessage;
   final String repliedTo;
+  final String senderUsername;
+  final String senderProfileImage;
   final MessageType repliedMessageType;
   final MessageType type;
   final DateTime timeSent;
@@ -22,6 +25,8 @@ class MessageModel {
     required this.message,
     required this.repliedMessage,
     required this.repliedTo,
+    required this.senderUsername,
+    required this.senderProfileImage,
     required this.repliedMessageType,
     required this.type,
     required this.timeSent,
@@ -39,6 +44,8 @@ class MessageModel {
     MessageType? type,
     DateTime? timeSent,
     bool? isRead,
+    String? senderUsername,
+    String? senderProfileImage,
   }) {
     return MessageModel(
       uid: uid ?? this.uid,
@@ -51,6 +58,8 @@ class MessageModel {
       type: type ?? this.type,
       timeSent: timeSent ?? this.timeSent,
       isRead: isRead ?? this.isRead,
+      senderUsername: senderUsername ?? this.senderUsername,
+      senderProfileImage: senderProfileImage ?? this.senderProfileImage,
     );
   }
 
@@ -66,6 +75,8 @@ class MessageModel {
       'type': type.type,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'isRead': isRead,
+      'senderUsername': senderUsername,
+      'senderProfileImage': senderProfileImage,
     };
   }
 
@@ -81,12 +92,14 @@ class MessageModel {
       type: (map['type'] as String).intoChatMessage(),
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int),
       isRead: map['isRead'] as bool,
+      senderUsername: map['senderUsername'] as String,
+      senderProfileImage: map['senderProfileImage'] as String,
     );
   }
 
   @override
   String toString() {
-    return 'MessageModel(uid: $uid, senderId: $senderId, recvId: $recvId, message: $message, repliedMessage: $repliedMessage, repliedTo: $repliedTo, repliedMessageType: $repliedMessageType, type: $type, timeSent: $timeSent, isRead: $isRead)';
+    return 'MessageModel(uid: $uid, senderId: $senderId, recvId: $recvId, message: $message, repliedMessage: $repliedMessage, repliedTo: $repliedTo, repliedMessageType: $repliedMessageType, type: $type, timeSent: $timeSent, isRead: $isRead, senderUsername: $senderUsername, senderProfileImage: $senderProfileImage)';
   }
 
   @override
@@ -102,7 +115,9 @@ class MessageModel {
         other.repliedMessageType == repliedMessageType &&
         other.type == type &&
         other.timeSent == timeSent &&
-        other.isRead == isRead;
+        other.isRead == isRead &&
+        other.senderUsername == senderUsername &&
+        other.senderProfileImage == senderProfileImage;
   }
 
   @override
@@ -116,11 +131,8 @@ class MessageModel {
         repliedMessageType.hashCode ^
         type.hashCode ^
         timeSent.hashCode ^
-        isRead.hashCode;
+        isRead.hashCode ^
+        senderUsername.hashCode ^
+        senderProfileImage.hashCode;
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory MessageModel.fromJson(String source) =>
-      MessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

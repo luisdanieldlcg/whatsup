@@ -12,6 +12,7 @@ import 'package:whatsup/features/chat/widgets/bubble/chat_bubble_bottom.dart';
 
 class ChatAudioBubble extends ConsumerStatefulWidget {
   final MessageModel message;
+  final bool isGroup;
   final bool isDark;
   final bool isMyMessage;
   final bool repeatedSender;
@@ -21,6 +22,7 @@ class ChatAudioBubble extends ConsumerStatefulWidget {
   const ChatAudioBubble({
     Key? key,
     required this.message,
+    required this.isGroup,
     required this.isDark,
     required this.isMyMessage,
     required this.repeatedSender,
@@ -124,52 +126,72 @@ class _ChatAudioBubbleState extends ConsumerState<ChatAudioBubble> {
             ? Colors.lightBlue.shade300
             : kPrimaryColor;
     return ChatBubble(
+      isGroup: widget.isGroup,
       isSenderMessage: widget.isMyMessage,
       model: widget.message,
       repeatedSender: widget.repeatedSender,
       isMostRecent: widget.isMostRecent,
       receiverName: widget.receiverName,
       audioLabel: audioLabel,
-      child: Row(
+      child: Stack(
         children: [
-          IconButton(
-            style: IconButton.styleFrom(
-              splashFactory: NoSplash.splashFactory,
-            ),
-            splashRadius: 1,
-            onPressed: handlePress,
-            icon: Icon(
-              state == AudioPlayerState.playing ? Icons.pause : Icons.play_arrow,
-              color: Colors.grey,
-              size: 40,
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: SliderTheme(
-              data: const SliderThemeData(
-                trackHeight: 4,
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
-                overlayShape: RoundSliderOverlayShape(overlayRadius: 12),
-              ),
-              child: Slider.adaptive(
-                value: currentPos.inSeconds.toDouble(),
-                min: 0,
-                max: maxDuration.inSeconds.toDouble(),
-                thumbColor: thumbColor,
-                secondaryActiveColor: Colors.grey,
-                activeColor:
-                    widget.isDark ? const Color.fromARGB(255, 239, 239, 239) : Colors.grey.shade600,
-                inactiveColor: Colors.grey.shade600,
-                onChanged: (value) {
-                  setState(() {
-                    currentPos = Duration(seconds: value.toInt());
-                  });
-                  player.seek(Duration(seconds: value.toInt()));
-                },
-              ),
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                IconButton(
+                  style: IconButton.styleFrom(
+                    splashFactory: NoSplash.splashFactory,
+                  ),
+                  splashRadius: 1,
+                  onPressed: handlePress,
+                  icon: Icon(
+                    state == AudioPlayerState.playing ? Icons.pause : Icons.play_arrow,
+                    color: Colors.grey,
+                    size: 40,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: SliderTheme(
+                    data: const SliderThemeData(
+                      trackHeight: 4,
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 12),
+                    ),
+                    child: Slider.adaptive(
+                      value: currentPos.inSeconds.toDouble(),
+                      min: 0,
+                      max: maxDuration.inSeconds.toDouble(),
+                      thumbColor: thumbColor,
+                      secondaryActiveColor: Colors.grey,
+                      activeColor: widget.isDark
+                          ? const Color.fromARGB(255, 239, 239, 239)
+                          : Colors.grey.shade600,
+                      inactiveColor: Colors.grey.shade600,
+                      onChanged: (value) {
+                        setState(() {
+                          currentPos = Duration(seconds: value.toInt());
+                        });
+                        player.seek(Duration(seconds: value.toInt()));
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+          Positioned(
+            left: 60,
+            bottom: -2,
+            child: Text(
+              audioLabel,
+              style: TextStyle(
+                fontSize: 13,
+                color: widget.isDark ? Colors.grey.shade400 : Colors.grey.shade700,
+              ),
+            ),
+          )
         ],
       ),
     );
