@@ -10,6 +10,7 @@ import 'package:whatsup/common/models/message.dart';
 import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/features/chat/widgets/bubble/chat_bubble_bottom.dart';
+import 'package:whatsup/features/chat/widgets/bubble/chat_reply_bubble.dart';
 
 class ChatBubble extends ConsumerWidget {
   final bool isSenderMessage;
@@ -45,7 +46,7 @@ class ChatBubble extends ConsumerWidget {
         : BubbleEdges.only(top: topMargin, right: 50, left: 10, bottom: bottomMargin);
     final showNip = !repeatedSender;
     return SwipeTo(
-      offsetDx: 0.15,
+      offsetDx: 0.16,
       onRightSwipe: () => makeReply(ref),
       animationDuration: const Duration(milliseconds: 85),
       child: Bubble(
@@ -66,11 +67,20 @@ class ChatBubble extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              if (model.repliedMessage.isNotEmpty) ...{
+                // if this is a reply we want to show the message we are replying to
+                // in a opaqued card like whatsapp does
+                ChatReplyBubble(
+                  isDarkEnabled: isDarkEnabled,
+                  model: model,
+                )
+              },
               child ?? const SizedBox.shrink(),
               ChatBubbleBottom(
                 model: model,
                 isDark: isDarkEnabled,
                 audioLabel: audioLabel,
+                isReply: model.repliedMessage.isNotEmpty,
                 isAudio: model.type == MessageType.audio,
               ),
             ],

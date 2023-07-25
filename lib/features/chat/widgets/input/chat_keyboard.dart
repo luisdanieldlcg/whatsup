@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
-import 'package:whatsup/features/chat/widgets/reply_container.dart';
+import 'package:whatsup/features/chat/widgets/input/chat_reply_card.dart';
 
 class ChatKeyboard extends ConsumerStatefulWidget {
   final bool showReplyBox;
@@ -57,7 +57,7 @@ class _ChatKeyboardState extends ConsumerState<ChatKeyboard> {
         child: Column(
           children: [
             if (widget.showReplyBox) ...{
-              ReplyContainer(replyingTo: widget.receiverName),
+              ChatReplyCard(replyingTo: widget.receiverName),
             },
             TextField(
               readOnly: shouldShowEmojis,

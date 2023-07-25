@@ -9,12 +9,14 @@ class ChatBubbleBottom extends StatelessWidget {
   final bool isDark;
   final bool isAudio;
   final String audioLabel;
+  final bool isReply;
   const ChatBubbleBottom({
     Key? key,
     required this.model,
     required this.isDark,
-    this.audioLabel = '',
     this.isAudio = false,
+    this.audioLabel = '',
+    required this.isReply,
   }) : super(key: key);
 
   @override

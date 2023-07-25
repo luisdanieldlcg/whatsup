@@ -102,6 +102,7 @@ class _ChatMessagesState extends ConsumerState<MessageList> {
                       model: message,
                       isDark: isDark,
                       isMessageSender: isMyMessage,
+                      receiverName: widget.receiverName,
                     ),
                   MessageType.video => ChatVideoBubble(
                       model: message,

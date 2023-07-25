@@ -5,9 +5,9 @@ import 'package:whatsup/common/providers.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 
-class ReplyContainer extends ConsumerWidget {
+class ChatReplyCard extends ConsumerWidget {
   final String replyingTo;
-  const ReplyContainer({
+  const ChatReplyCard({
     super.key,
     required this.replyingTo,
   });
