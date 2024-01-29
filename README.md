@@ -1,7 +1,13 @@
-# WhatsUp
+<!-- # WhatsUp -->
 
+<h1 align="center">WhatsUp</h1>
+<p align="center">
+  <img src="assets/img/whatsup.jpg" alt="WhatsUp" >
+</p>
+<p align="center">
 WhatsUp is a WhatsApp clone built with Flutter and Firebase. It aims to replicate some of its core features
-but its main purpose is to showcase how easy it is to build real-time applications with Flutter and Firebase.
+but its main purpose is to showcase how easy it is to build real-time applications with Flutter and Firebase. 
+</p>
 
 ## Features
 
