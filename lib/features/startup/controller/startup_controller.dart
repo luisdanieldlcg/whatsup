@@ -4,6 +4,7 @@ import 'package:whatsup/common/repositories/auth.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/constants.dart';
 import 'package:whatsup/common/util/ext.dart';
+import 'package:whatsup/common/util/logger.dart';
 
 final startUpControllerProvider = Provider<StartUpController>((ref) {
   return StartUpController(
@@ -24,8 +25,13 @@ class StartUpController {
   Future<void> updateOnlineState(bool isOnline) async {
     if (_userRepository.activeUser.isNone()) return;
     final user = _userRepository.activeUser.unwrap();
-    await _userRepository.users.doc(user.uid).update({
-      kIsOnlineField: isOnline,
-    });
+    try {
+      await _userRepository.users.doc(user.uid).update({
+        kIsOnlineField: isOnline,
+      });
+    } catch (e) {
+      final logger = AppLogger.getLogger((StartUpController).toString());
+      logger.e("Seems like the user phone is registered, but not found in the database.");
+    }
   }
 }

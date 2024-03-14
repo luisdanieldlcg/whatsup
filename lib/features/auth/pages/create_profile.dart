@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/file_picker.dart';
 import 'package:whatsup/common/util/misc.dart';
+import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/router.dart';
 
 class CreateProfilePage extends ConsumerStatefulWidget {
@@ -36,33 +37,12 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     return profilePic.match(
       () => CircleAvatar(
         backgroundColor: Colors.grey.withOpacity(.2),
-        backgroundImage: const NetworkImage(
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
-        ),
         radius: size,
+        child: const Icon(Icons.person, size: 32),
       ),
       (pic) => CircleAvatar(
         backgroundImage: FileImage(pic),
         radius: size,
-      ),
-    );
-  }
-
-  Widget get loadingIndicator {
-    return const Center(
-      child: Column(
-        children: [
-          Spacer(flex: 2),
-          SizedBox(
-            width: 64,
-            height: 64,
-            child: CircularProgressIndicator(
-              strokeWidth: 6.0,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          ),
-          Spacer(flex: 3),
-        ],
       ),
     );
   }
@@ -75,7 +55,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     setState(() {
       loading = true;
     });
-    ref.read(userRepositoryProvider).create(
+    await ref.read(userRepositoryProvider).create(
           name: nameController.text,
           avatar: profilePic,
           onError: (error) => showSnackbar(context, error),
@@ -104,7 +84,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
         ],
       ),
       body: loading
-          ? loadingIndicator
+          ? const WorkProgressIndicator()
           : Center(
               child: Column(
                 children: [
@@ -113,7 +93,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
                     children: [
                       profileImage,
                       Positioned(
-                        bottom: -10,
+                        bottom: -3,
                         left: 80,
                         child: IconButton(
                           onPressed: pickProfilePic,

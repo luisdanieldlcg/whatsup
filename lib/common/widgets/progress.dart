@@ -6,7 +6,13 @@ class WorkProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: CircularProgressIndicator(),
+      child: SizedBox(
+        width: 64,
+        height: 64,
+        child: CircularProgressIndicator(
+          strokeWidth: 5.0,
+        ),
+      ),
     );
   }
 }

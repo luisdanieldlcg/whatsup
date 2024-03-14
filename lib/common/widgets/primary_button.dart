@@ -13,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).colorScheme.onPrimary;
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -31,9 +32,7 @@ class PrimaryButton extends StatelessWidget {
             )
           : Text(
               title,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
+              style: TextStyle(fontSize: 16, color: textColor),
             ),
     );
   }

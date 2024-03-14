@@ -38,7 +38,7 @@ dependencies:
   firebase_auth: ^4.7.0
   cloud_firestore: ^4.8.3
   firebase_storage: ^11.2.5
-  country_picker: ^2.0.20
+  country_picker: ^2.0.25
   image_picker: ^1.0.1
   flutter_contacts: ^1.1.7
   uuid: ^3.0.7

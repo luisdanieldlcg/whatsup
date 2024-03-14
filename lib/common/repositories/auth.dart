@@ -61,9 +61,7 @@ class AuthRepository {
         codeSent: (id, resendToken) async {
           onCodeSent(id);
         },
-        codeAutoRetrievalTimeout: (id) {
-          
-        },
+        codeAutoRetrievalTimeout: (id) {},
       );
     } on FirebaseAuthException catch (e) {
       onError(_getOtpErrorMsg(e.code));
@@ -98,7 +96,7 @@ class AuthRepository {
   }
 
   String _getOtpErrorMsg(String code) {
-    String message = "Something went wrong";
+    String message = "Something went very wrong";
     logger.e("Error code: $code");
     switch (code) {
       case "account-exists-with-different-credential":

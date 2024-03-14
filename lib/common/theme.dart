@@ -48,7 +48,6 @@ final lightTheme = ThemeData.light().copyWith(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kPrimaryColor,
   ),
-  
 );
 
 final darkTheme = ThemeData.dark().copyWith(
