@@ -87,7 +87,10 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
                     child: FloatingActionButton(
                       elevation: 0,
                       onPressed: sendText,
-                      child: Icon(micIcon),
+                      child: Icon(
+                        micIcon,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

@@ -6,7 +6,6 @@ import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/ext.dart';
 import 'package:whatsup/common/widgets/error.dart';
 import 'package:whatsup/common/widgets/list_tile_shimmer.dart';
-import 'package:whatsup/common/widgets/progress.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
 
 final selectedGroupContacts = StateProvider<List<Contact>>((ref) => []);
@@ -62,7 +61,6 @@ class _SelectGroupContactsState extends ConsumerState<SelectGroupContacts> {
                           title: Text(contact.displayName),
                           subtitle: Text(contact.phones[0].normalizedNumber),
                           trailing: Checkbox(
-                            fillColor: const MaterialStatePropertyAll(kPrimaryColor),
                             value: selectedContacts.contains(index),
                             onChanged: (value) {
                               toggleSelection(index, contact);

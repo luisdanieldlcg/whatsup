@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/theme.dart';
 import 'package:whatsup/common/util/constants.dart';
@@ -147,29 +148,29 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
     return Column(
       children: [
         const Spacer(),
-        Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 50),
-              opacity: controller.index == 1 ? 1 : 0,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 185),
-                height: controller.index == 1 ? 185 : 56,
-                child: FloatingActionButton(
-                  heroTag: 'writer',
-                  onPressed: () {
-                    Navigator.pushNamed(context, PageRouter.statusWriter);
-                  },
-                  backgroundColor: kDarkTextFieldBgColor,
-                  mini: true,
-                  child: const Icon(Icons.edit),
-                ),
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 50),
+          opacity: controller.index == 1 ? 1 : 0,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 185),
+            width: 45,
+            height: 45,
+            child: FloatingActionButton(
+              heroTag: 'writer',
+              onPressed: () {
+                Navigator.pushNamed(context, PageRouter.statusWriter);
+              },
+              backgroundColor: kDarkTextFieldBgColor,
+              mini: true,
+              child: const Icon(
+                Icons.edit,
+                color: Colors.white,
               ),
             ),
-            lowerButton,
-          ],
+          ),
         ),
+        const SizedBox(height: 20),
+        lowerButton,
       ],
     );
   }

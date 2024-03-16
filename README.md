@@ -1,8 +1,6 @@
-<!-- # WhatsUp -->
-
 <h1 align="center">WhatsUp</h1>
 <p align="center">
-  <img src="assets/img/whatsup.jpg" alt="WhatsUp"  >
+  <img src="assets/img/whatsup.jpg" width="400" alt="WhatsUp"  >
 </p>
 <p align="center">
 WhatsUp aims to replicate some of the WhatsApp core features but its main purpose is to showcase how easy it is to build real-time applications with Flutter and Firebase. 

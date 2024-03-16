@@ -59,14 +59,15 @@ class _StatusViewPageState extends ConsumerState<StatusViewerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StoryView(
-      storyItems: storyItems,
-      controller: controller,
-      inline: false,
-      repeat: false,
-      onComplete: () {
-        Navigator.pop(context);
-      },
-    ));
+      body: StoryView(
+        storyItems: storyItems,
+        controller: controller,
+        inline: false,
+        repeat: false,
+        onComplete: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 }

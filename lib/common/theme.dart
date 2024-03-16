@@ -38,7 +38,11 @@ final lightTheme = ThemeData.light().copyWith(
     seedColor: kPrimaryColor,
   ),
   scaffoldBackgroundColor: kLightBgColor,
-  appBarTheme: const AppBarTheme(elevation: 0.0),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: kPrimaryColor,
+    foregroundColor: Colors.white,
+    elevation: 0.0,
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: kPrimaryColor,

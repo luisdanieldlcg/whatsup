@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsup/common/models/user.dart';
 import 'package:whatsup/common/repositories/user.dart';
 import 'package:whatsup/common/util/constants.dart';
+import 'package:whatsup/common/util/logger.dart';
 import 'package:whatsup/features/contact/repository/contact.dart';
 
 final readAllContactsProvider = FutureProvider((ref) {
@@ -31,6 +32,8 @@ class SelectContactController {
     required VoidCallback contactNotFound,
     required Function(UserModel user) contactFound,
   }) async {
+    AppLogger.getLogger('Contact')
+        .i("Before replace contact with phone: ${selected.phones[0].number}");
     String phone = selected.phones[0].number
         .replaceAll(' ', '')
         .replaceAll('(', '')
@@ -41,6 +44,7 @@ class SelectContactController {
     if (!phone.startsWith('+')) {
       phone = '+$phone';
     }
+    AppLogger.getLogger('Contact').i("Finding contact with phone: $phone");
     final query = userRepository.users.where(kPhoneNumberField, isEqualTo: phone).limit(1).get();
     final snapshot = await query;
     if (snapshot.docs.isEmpty) {

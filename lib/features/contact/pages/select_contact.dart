@@ -21,7 +21,7 @@ class SelectContactPage extends ConsumerWidget {
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.search),
-          ),
+        ),
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.more_vert),
